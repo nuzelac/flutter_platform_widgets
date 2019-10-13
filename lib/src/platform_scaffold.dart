@@ -10,6 +10,7 @@ import 'package:flutter/cupertino.dart'
         CupertinoTabBar,
         CupertinoTabController,
         CupertinoTabScaffold,
+        CupertinoTabView,
         ObstructingPreferredSizeWidget;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
@@ -180,13 +181,15 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
         tabBar: tabBar,
         controller: data?.controller,
         tabBuilder: (BuildContext context, int index) {
-          return CupertinoPageScaffold(
-            backgroundColor: data?.backgroundColor ?? backgroundColor,
-            child: iosContentPad(context, child, navigationBar, tabBar),
-            navigationBar: navigationBar,
-            resizeToAvoidBottomInset: data?.resizeToAvoidBottomInset ?? true,
-            // key: widgetKey used for CupertinoTabScaffold
-          );
+          return CupertinoTabView(builder: (BuildContext context) {
+            return CupertinoPageScaffold(
+              backgroundColor: data?.backgroundColor ?? backgroundColor,
+              child: iosContentPad(context, child, navigationBar, tabBar),
+              navigationBar: navigationBar,
+              resizeToAvoidBottomInset: data?.resizeToAvoidBottomInset ?? true,
+              // key: widgetKey used for CupertinoTabScaffold
+            );
+          });
         },
       );
     } else {
