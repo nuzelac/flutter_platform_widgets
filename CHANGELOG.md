@@ -1,3 +1,10 @@
+## [0.30.1] - December 11, 2019
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Fixes the breaking change from flutter which causes the error: `The getter 'fullObstruction' isn't defined for the class 'ObstructingPreferredSizeWidget'.`
+- Updated all widgets compatible with Flutter v1.12.13+hotfix.5
+
 ## [0.20.2] - October 12, 2019
 
 #### (Flutter version support: v1.9.1+hotfix.2)
@@ -130,7 +137,7 @@
 #### (Flutter version support: v1.0.0)
 
 - Redone the way PlaformScaffold renders Cupertino. Requires fluttter version 0.11+
-- Added iosContentPadding to PlatformScaffold for iOS to push content bown past the navigation (app) bar
+- Added iosContentPadding to PlatformScaffold for iOS to push content down past the navigation (app) bar
 
 ## [0.4.0] - Oct 27, 2018
 

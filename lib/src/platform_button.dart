@@ -4,7 +4,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:flutter/cupertino.dart' show CupertinoButton;
+import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoColors;
 import 'package:flutter/material.dart'
     show
         MaterialButton,
@@ -61,7 +61,8 @@ class MaterialFlatButtonData extends _BaseData {
       this.hoverColor,
       this.focusNode,
       this.hoverElevation,
-      this.autofocus})
+      this.autofocus,
+      this.onLongPress})
       : super(
             widgetKey: widgetKey,
             child: child,
@@ -91,6 +92,7 @@ class MaterialFlatButtonData extends _BaseData {
   final FocusNode focusNode;
   final double hoverElevation;
   final bool autofocus;
+  final VoidCallback onLongPress;
 }
 
 class MaterialRaisedButtonData extends _BaseData {
@@ -120,7 +122,8 @@ class MaterialRaisedButtonData extends _BaseData {
       this.hoverColor,
       this.focusNode,
       this.hoverElevation,
-      this.autofocus})
+      this.autofocus,
+      this.onLongPress})
       : super(
             widgetKey: widgetKey,
             child: child,
@@ -150,6 +153,7 @@ class MaterialRaisedButtonData extends _BaseData {
   final FocusNode focusNode;
   final double hoverElevation;
   final bool autofocus;
+  final VoidCallback onLongPress;
 }
 
 class CupertinoButtonData extends _BaseData {
@@ -230,6 +234,7 @@ class PlatformButton
         focusNode: dataFlat?.focusNode,
         hoverColor: dataFlat?.hoverColor,
         autofocus: dataFlat?.autofocus ?? false,
+        onLongPress: dataFlat?.onLongPress,
       );
     }
 
@@ -265,6 +270,7 @@ class PlatformButton
       focusNode: dataRaised?.focusNode,
       hoverElevation: dataRaised?.hoverElevation,
       autofocus: dataRaised?.autofocus ?? false,
+      onLongPress: dataRaised?.onLongPress,
     );
   }
 
@@ -275,7 +281,7 @@ class PlatformButton
       data = ios(context);
     }
 
-    return new CupertinoButton(
+    return CupertinoButton(
       key: data?.widgetKey ?? widgetKey,
       child: data?.child ?? child,
       onPressed: data?.onPressed ?? onPressed,
@@ -285,7 +291,9 @@ class PlatformButton
       minSize: data?.minSize ?? 44.0,
       padding: data?.padding ?? padding,
       pressedOpacity: data?.pressedOpacity ?? 0.1,
-      disabledColor: data?.disabledColor ?? disabledColor,
+      disabledColor: data?.disabledColor ??
+          disabledColor ??
+          CupertinoColors.quaternarySystemFill,
     );
   }
 }

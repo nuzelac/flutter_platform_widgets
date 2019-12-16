@@ -4,7 +4,7 @@
  * See LICENSE for distribution and usage details.
  */
 
-import 'package:flutter/cupertino.dart' show CupertinoButton;
+import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoColors;
 import 'package:flutter/material.dart' show IconButton;
 import 'package:flutter/widgets.dart';
 
@@ -68,6 +68,7 @@ class MaterialIconButtonData extends _BaseData {
     this.hoverColor,
     this.focusNode,
     this.autofocus,
+    this.enableFeedback,
   }) : super(
             widgetKey: widgetKey,
             icon: icon,
@@ -85,6 +86,7 @@ class MaterialIconButtonData extends _BaseData {
   final Color hoverColor;
   final FocusNode focusNode;
   final bool autofocus;
+  final bool enableFeedback;
 }
 
 class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
@@ -138,6 +140,7 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
       focusNode: data?.focusNode,
       hoverColor: data?.hoverColor,
       autofocus: data?.autofocus ?? false,
+      enableFeedback: data?.enableFeedback ?? true,
     );
   }
 
@@ -158,7 +161,9 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
           const BorderRadius.all(const Radius.circular(8.0)),
       minSize: data?.minSize ?? 44.0,
       pressedOpacity: data?.pressedOpacity ?? 0.1,
-      disabledColor: data?.disabledColor ?? disabledColor,
+      disabledColor: data?.disabledColor ??
+          disabledColor ??
+          CupertinoColors.quaternarySystemFill,
     );
   }
 }
