@@ -2,14 +2,28 @@ import 'package:flutter/cupertino.dart'
     show
         CupertinoActionSheet,
         CupertinoActionSheetAction,
+        CupertinoDynamicColor,
         CupertinoIcons,
-        CupertinoThemeData;
-import 'package:flutter/material.dart' show Colors, Icons, ThemeData;
+        CupertinoThemeData,
+        DefaultCupertinoLocalizations;
+import 'package:flutter/material.dart'
+    show
+        Colors,
+        DefaultMaterialLocalizations,
+        Icons,
+        Theme,
+        ThemeData,
+        ThemeMode;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+import 'iconPage.dart';
 import 'listViewHeaderPage.dart';
 import 'listViewPage.dart';
+import 'tabbed/basicTabbedPage.dart';
+import 'tabbed/originalTabbedPage.dart';
+import 'tabbed/sliverTabbedPage.dart';
 import 'tabbedPage.dart';
 
 void main() => runApp(Main());
@@ -26,32 +40,75 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
+  Brightness brightness = Brightness.light;
+
   @override
   Widget build(BuildContext context) {
-    final themeData = new ThemeData(
+    final materialTheme = new ThemeData(
       primarySwatch: Colors.purple,
+    );
+    final materialDarkTheme = new ThemeData(
+      brightness: Brightness.dark,
+      primarySwatch: Colors.teal,
     );
 
     final cupertinoTheme = new CupertinoThemeData(
-      primaryColor: Colors.purple,
+      brightness: brightness, // if null will use the system theme
+      primaryColor: CupertinoDynamicColor.withBrightness(
+        color: Colors.purple,
+        darkColor: Colors.cyan,
+      ),
     );
 
     // Example of optionally setting the platform upfront.
     //final initialPlatform = TargetPlatform.iOS;
 
-    return PlatformProvider(
-      //initialPlatform: initialPlatform,
-      builder: (BuildContext context) => PlatformApp(
-        title: 'Flutter Platform Widgets',
-        android: (_) => new MaterialAppData(theme: themeData),
-        ios: (_) => new CupertinoAppData(theme: cupertinoTheme),
-        home: LandingPage(),
+    // If you mix material and cupertino widgets together then you cam
+    // set this setting. Will mean ios darmk mode to not to work properly
+    //final settings = PlatformSettingsData(iosUsesMaterialWidgets: true);
+
+    // This theme is required since icons light/dark mode will look for it
+    return Theme(
+      data: brightness == Brightness.light ? materialTheme : materialDarkTheme,
+      child: PlatformProvider(
+        //initialPlatform: initialPlatform,
+        builder: (context) => PlatformApp(
+          localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+            DefaultMaterialLocalizations.delegate,
+            DefaultWidgetsLocalizations.delegate,
+            DefaultCupertinoLocalizations.delegate,
+          ],
+          title: 'Flutter Platform Widgets',
+          android: (_) {
+            return new MaterialAppData(
+              theme: materialTheme,
+              darkTheme: materialDarkTheme,
+              themeMode: brightness == Brightness.light
+                  ? ThemeMode.light
+                  : ThemeMode.dark,
+            );
+          },
+          ios: (_) => new CupertinoAppData(
+            theme: cupertinoTheme,
+          ),
+          home: LandingPage(() {
+            setState(() {
+              brightness = brightness == Brightness.light
+                  ? Brightness.dark
+                  : Brightness.light;
+            });
+          }),
+        ),
       ),
     );
   }
 }
 
 class LandingPage extends StatefulWidget {
+  LandingPage(this.toggleBrightness);
+
+  final void Function() toggleBrightness;
+
   @override
   LandingPageState createState() => LandingPageState();
 }
@@ -62,12 +119,15 @@ class LandingPageState extends State<LandingPage> {
     super.initState();
 
     textControlller = TextEditingController(text: 'text');
+    textMultiLineControlller = TextEditingController(text: 'text multi line');
   }
 
   bool switchValue = false;
   double sliderValue = 0.5;
 
   TextEditingController textControlller;
+
+  TextEditingController textMultiLineControlller;
 
   _switchPlatform(BuildContext context) {
     if (isMaterial(context)) {
@@ -77,12 +137,23 @@ class LandingPageState extends State<LandingPage> {
     }
   }
 
+  _toggleBrightness() {
+    widget.toggleBrightness();
+  }
+
   @override
   Widget build(BuildContext context) {
     return PlatformScaffold(
       iosContentPadding: true,
       appBar: PlatformAppBar(
         title: Text('Flutter Platform Widgets'),
+        trailingActions: <Widget>[
+          PlatformIconButton(
+            padding: EdgeInsets.zero,
+            icon: Icon(context.platformIcons.share),
+            onPressed: () {},
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -98,6 +169,11 @@ class LandingPageState extends State<LandingPage> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                   'This approach is best when both iOS and Android apps follow the same design in layout and navigation, but need to look as close to native styling as possible.'),
+            ),
+            Divider(),
+            PlatformButton(
+              child: PlatformText('Toggle Dark / Light mode'),
+              onPressed: _toggleBrightness,
             ),
             Divider(),
             SectionHeader(title: '1. Change Platform'),
@@ -155,6 +231,15 @@ class LandingPageState extends State<LandingPage> {
                 controller: textControlller,
               ),
             ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              height: 100,
+              child: PlatformTextField(
+                expands: true,
+                maxLines: null,
+                controller: textMultiLineControlller,
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlatformCircularProgressIndicator(),
@@ -175,19 +260,37 @@ class LandingPageState extends State<LandingPage> {
             SectionHeader(title: '5. Navigation'),
             PlatformButton(
               child: PlatformText('Open Tabbed Page'),
-              onPressed: () => _openPage((_) => new TabbedPage()),
+              onPressed: () => _openPage((_) => TabbedPage()),
+            ),
+            PlatformButton(
+              child: PlatformText('Open Basic Tabbed Page'),
+              onPressed: () => _openPage((_) => BasicTabbedPage()),
+            ),
+            PlatformButton(
+              child: PlatformText('Open Sliver Tabbed Page'),
+              onPressed: () => _openPage((_) => SliverTabbedPage()),
+            ),
+            PlatformButton(
+              child: PlatformText('Open Original Tabbed Page'),
+              onPressed: () => _openPage((_) => OriginalTabbedPage()),
             ),
             Divider(),
-            SectionHeader(title: '6. Advanced'),
+            SectionHeader(title: '6. Icons'),
+            PlatformButton(
+              child: PlatformText('Open Icons Page'),
+              onPressed: () => _openPage((_) => IconsPage()),
+            ),
+            Divider(),
+            SectionHeader(title: '7. Advanced'),
             PlatformButton(
               child: PlatformText('Page with ListView'),
-              onPressed: () => _openPage((_) => new ListViewPage()),
+              onPressed: () => _openPage((_) => ListViewPage()),
             ),
             PlatformWidget(
               android: (_) => Container(), //this is for iOS only
               ios: (_) => PlatformButton(
                 child: PlatformText('iOS Page with Colored Header'),
-                onPressed: () => _openPage((_) => new ListViewHeaderPage()),
+                onPressed: () => _openPage((_) => ListViewHeaderPage()),
               ),
             ),
           ],

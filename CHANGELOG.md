@@ -1,3 +1,43 @@
+## [0.32.4] - January 21, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Fix for `PlatformTextField` not allowing for `maxLines` to be null which is required when `expands` is true to enable multiline. (Thanks bangfalse)
+
+## [0.32.3] - January 19, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Fix for `PlatformTabScaffold` to use androidTabs properly. (Thanks abahnj)
+
+## [0.32.2] - January 16, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Update widget arguments to match latest flutter widgets.
+
+## [0.32.1] - January 15, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Fix for PlatformTabScaffold that would not pickup the right index or set a default value.
+
+## [0.32.0] - January 14, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Increased SDK verson to be ">=2.6.0 <3.0.0"
+- Added PlatformIcons where Material and Cupertino icons are picked based on the platform
+- Added PlatformTabScaffold to offer a simplier and more flexible platform tabbed page
+
+## [0.31.0] - January 09, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Updated PlatformTextField for Cupertino to support dark mode
+- Removed Material from Cupertino Scaffold as it interfers with ios dark mode. If Material widgets are used on ios then this can be turned back on or add the Material widget to places that have it. Set iosUsesMaterialWidgets = true to retain behvour on the settings object passed in as an argument to `PlatformProvider`.
+- PlaformSlider for Cupertino uses Colors instead of CupertinoColors to match the underlying flutter widget
+
 ## [0.30.1] - December 11, 2019
 
 #### (Flutter version support: v1.12.13+hotfix.5)

@@ -5,7 +5,7 @@
  */
 
 import 'package:flutter/cupertino.dart' show CupertinoColors, CupertinoSlider;
-import 'package:flutter/material.dart' show Slider, SemanticFormatterCallback;
+import 'package:flutter/material.dart' show SemanticFormatterCallback, Slider;
 import 'package:flutter/widgets.dart';
 
 import 'widget_base.dart';
@@ -88,7 +88,7 @@ class CupertinoSliderData extends _BaseData {
             min: min,
             max: max);
 
-  final CupertinoColors thumbColor;
+  final Color thumbColor;
 }
 
 class PlatformSlider extends PlatformWidgetBase<CupertinoSlider, Slider> {
@@ -140,8 +140,8 @@ class PlatformSlider extends PlatformWidgetBase<CupertinoSlider, Slider> {
       onChangeEnd: data?.onChangeEnd ?? onChangeEnd,
       activeColor: data?.activeColor ?? activeColor,
       divisions: data?.divisions ?? divisions,
-      max: data?.max ?? max,
-      min: data?.min ?? min,
+      max: data?.max ?? max ?? 1.0,
+      min: data?.min ?? min ?? 0.0,
       inactiveColor: data?.inactiveColor,
       label: data?.label,
       semanticFormatterCallback: data?.semanticFormatterCallback,
@@ -162,8 +162,8 @@ class PlatformSlider extends PlatformWidgetBase<CupertinoSlider, Slider> {
       onChangeEnd: data?.onChangeEnd ?? onChangeEnd,
       activeColor: data?.activeColor ?? activeColor,
       divisions: data?.divisions ?? divisions,
-      max: data?.max ?? max,
-      min: data?.min ?? min,
+      max: data?.max ?? max ?? 1.0,
+      min: data?.min ?? min ?? 0.0,
       thumbColor: data?.thumbColor ?? CupertinoColors.white,
     );
   }
