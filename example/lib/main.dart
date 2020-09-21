@@ -72,6 +72,11 @@ class _AppState extends State<App> {
       data: brightness == Brightness.light ? materialTheme : materialDarkTheme,
       child: PlatformProvider(
         //initialPlatform: initialPlatform,
+        // settings: PlatformSettingsData(
+        //   platformStyle: PlatformStyleData(
+        //     web: PlatformStyle.Cupertino,
+        //   ),
+        // ),
         builder: (context) => PlatformApp(
           localizationsDelegates: <LocalizationsDelegate<dynamic>>[
             DefaultMaterialLocalizations.delegate,
@@ -79,7 +84,7 @@ class _AppState extends State<App> {
             DefaultCupertinoLocalizations.delegate,
           ],
           title: 'Flutter Platform Widgets',
-          android: (_) {
+          material: (_, __) {
             return new MaterialAppData(
               theme: materialTheme,
               darkTheme: materialDarkTheme,
@@ -88,7 +93,7 @@ class _AppState extends State<App> {
                   : ThemeMode.dark,
             );
           },
-          ios: (_) => new CupertinoAppData(
+          cupertino: (_, __) => new CupertinoAppData(
             theme: cupertinoTheme,
           ),
           home: LandingPage(() {
@@ -182,8 +187,8 @@ class LandingPageState extends State<LandingPage> {
               onPressed: () => _switchPlatform(context),
             ),
             PlatformWidget(
-              android: (_) => Text('Currently showing Material'),
-              ios: (_) => Text('Currently showing Cupertino'),
+              material: (_, __) => Text('Currently showing Material'),
+              cupertino: (_, __) => Text('Currently showing Cupertino'),
             ),
             Text('Scaffold: PlatformScaffold'),
             Text('AppBar: PlatformAppBar'),
@@ -198,15 +203,16 @@ class LandingPageState extends State<LandingPage> {
               onPressed: () {},
             ),
             PlatformButton(
-              child: PlatformText('Platform Flat Button'),
+              child: PlatformText('Platform Flat/Filled Button'),
               onPressed: () {},
-              androidFlat: (_) => MaterialFlatButtonData(),
+              materialFlat: (_, __) => MaterialFlatButtonData(),
+              cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlatformIconButton(
-                androidIcon: Icon(Icons.home),
-                iosIcon: Icon(CupertinoIcons.home),
+                materialIcon: Icon(Icons.home),
+                cupertinoIcon: Icon(CupertinoIcons.home),
                 onPressed: () {},
               ),
             ),
@@ -242,7 +248,32 @@ class LandingPageState extends State<LandingPage> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlatformCircularProgressIndicator(),
+              child: PlatformCircularProgressIndicator(
+                cupertino: (_, __) => CupertinoProgressIndicatorData(),
+                material: (_, __) => MaterialProgressIndicatorData(),
+              ),
+            ),
+            Divider(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PlatformWidgetBuilder(
+                cupertino: (_, child, __) => GestureDetector(
+                  child: child,
+                  onTap: () => print('Cupertino PlatformWidgetBuilder'),
+                ),
+                material: (_, child, __) => GestureDetector(
+                  child: child,
+                  onTap: () => print('Material PlatformWidgetBuilder'),
+                ),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: PlatformText('Platform Widget Builder'),
+                ),
+              ),
             ),
             Divider(),
             SectionHeader(title: '3. Dialogs'),
@@ -287,8 +318,7 @@ class LandingPageState extends State<LandingPage> {
               onPressed: () => _openPage((_) => ListViewPage()),
             ),
             PlatformWidget(
-              android: (_) => Container(), //this is for iOS only
-              ios: (_) => PlatformButton(
+              cupertino: (_, __) => PlatformButton(
                 child: PlatformText('iOS Page with Colored Header'),
                 onPressed: () => _openPage((_) => ListViewHeaderPage()),
               ),
@@ -313,8 +343,8 @@ class LandingPageState extends State<LandingPage> {
     showPlatformModalSheet(
       context: context,
       builder: (_) => PlatformWidget(
-        android: (_) => _androidPopupContent(),
-        ios: (_) => _cupertinoSheetContent(),
+        material: (_, __) => _androidPopupContent(),
+        cupertino: (_, __) => _cupertinoSheetContent(),
       ),
     );
   }

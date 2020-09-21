@@ -6,9 +6,16 @@
 
 import 'package:flutter/cupertino.dart' show CupertinoDialogAction;
 import 'package:flutter/material.dart'
-    show FlatButton, Brightness, ButtonTextTheme, MaterialTapTargetSize;
+    show
+        Brightness,
+        ButtonTextTheme,
+        FlatButton,
+        MaterialTapTargetSize,
+        VisualDensity;
+import 'package:flutter/rendering.dart' show MouseCursor;
 import 'package:flutter/widgets.dart';
 
+import 'platform.dart';
 import 'widget_base.dart';
 
 abstract class _BaseData {
@@ -41,7 +48,14 @@ class MaterialDialogActionData extends _BaseData {
     this.hoverColor,
     this.focusNode,
     this.autofocus,
-  }) : super(widgetKey: widgetKey, child: child, onPressed: onPressed);
+    this.visualDensity,
+    this.onLongPress,
+    this.mouseCursor,
+  }) : super(
+          widgetKey: widgetKey,
+          child: child,
+          onPressed: onPressed,
+        );
 
   final Color color;
   final Brightness colorBrightness;
@@ -60,6 +74,9 @@ class MaterialDialogActionData extends _BaseData {
   final Color hoverColor;
   final FocusNode focusNode;
   final bool autofocus;
+  final VisualDensity visualDensity;
+  final VoidCallback onLongPress;
+  final MouseCursor mouseCursor;
 }
 
 class CupertinoDialogActionData extends _BaseData {
@@ -70,7 +87,11 @@ class CupertinoDialogActionData extends _BaseData {
       this.isDefaultAction,
       this.isDestructiveAction,
       this.textStyle})
-      : super(widgetKey: widgetKey, child: child, onPressed: onPressed);
+      : super(
+          widgetKey: widgetKey,
+          child: child,
+          onPressed: onPressed,
+        );
 
   final bool isDefaultAction;
   final bool isDestructiveAction;
@@ -83,23 +104,28 @@ class PlatformDialogAction
   final Widget child;
   final VoidCallback onPressed;
 
+  @Deprecated('Use material argument. material: (context, platform) {}')
   final PlatformBuilder<MaterialDialogActionData> android;
+  @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
   final PlatformBuilder<CupertinoDialogActionData> ios;
 
-  PlatformDialogAction(
-      {Key key,
-      this.widgetKey,
-      @required this.child,
-      @required this.onPressed,
-      this.android,
-      this.ios})
-      : super(key: key);
+  final PlatformBuilder2<MaterialDialogActionData> material;
+  final PlatformBuilder2<CupertinoDialogActionData> cupertino;
+
+  PlatformDialogAction({
+    Key key,
+    this.widgetKey,
+    @required this.child,
+    @required this.onPressed,
+    this.android,
+    this.ios,
+    this.material,
+    this.cupertino,
+  }) : super(key: key);
   @override
-  FlatButton createAndroidWidget(BuildContext context) {
-    MaterialDialogActionData data;
-    if (android != null) {
-      data = android(context);
-    }
+  FlatButton createMaterialWidget(BuildContext context) {
+    final data =
+        android?.call(context) ?? material?.call(context, platform(context));
 
     return FlatButton(
       key: data?.widgetKey ?? widgetKey,
@@ -122,15 +148,16 @@ class PlatformDialogAction
       focusNode: data?.focusNode,
       hoverColor: data?.hoverColor,
       autofocus: data?.autofocus ?? false,
+      visualDensity: data?.visualDensity,
+      onLongPress: data?.onLongPress,
+      mouseCursor: data?.mouseCursor,
     );
   }
 
   @override
-  CupertinoDialogAction createIosWidget(BuildContext context) {
-    CupertinoDialogActionData data;
-    if (ios != null) {
-      data = ios(context);
-    }
+  CupertinoDialogAction createCupertinoWidget(BuildContext context) {
+    final data =
+        ios?.call(context) ?? cupertino?.call(context, platform(context));
 
     return CupertinoDialogAction(
       key: data?.widgetKey ?? widgetKey,

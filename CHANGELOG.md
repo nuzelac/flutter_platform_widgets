@@ -1,3 +1,65 @@
+## [0.60.2] - August 22, 2020
+
+#### (Flutter version support: v1.20.0 - v1.20.2)
+
+- Added const to icons for treeshaking (thanks sck-v)
+- Added contributers to ReadMe
+
+## [0.60.1] - August 05, 2020
+
+#### (Flutter version support: v1.20)
+
+- Upgrade to flutter version v1.20
+
+
+## [0.51.0] - June 25, 2020
+
+#### (Flutter version support: v1.17.0-v1.17.4)
+
+- added `PlatformWidgetBuilder` which allows to use a platform specific as a parent widget for a child that is the same for both platforms.
+- Forced deprecation on widget arguments to make them more obvious
+- Added more PlatformIcons (thanks mlava)
+
+## [0.50.1] - June 09, 2020
+
+#### (Flutter version support: v1.17.0-v1.17.3)
+
+- added `cupertinoTabChildBuilder` to `PlartformScaffold` in order to build cupertino tabs when they are viewed. (thanks AlexIver)
+
+## [0.50.0] - May 20, 2020
+
+#### (Flutter version support: v1.17.0-v1.17.1)
+
+- Changed the enhancement of widgets to use an argument matching the style rather than platform. `android: (_){}` becomes `material: (_, __){}` and `ios: (_){}` becomes `cupertino: (_, __){}`. The second argument of the callback is now `PlatformTarget` which will allow a decision (if required) to return a different data object based on the platform.
+- `PlatformTarget` is similar to the flutter `TargetPlatform` with the addition of `web`.
+- The use of `android: (_){}` and `ios: (_){}` is now deprecated and will be removed in a future release.
+- `showPlatformModalSheet` and `showPlatformDialog` has deprecated arguments
+
+
+## [0.41.0] - May 18, 2020
+
+#### (Flutter version support: v1.17.0-v1.17.1)
+
+- Added configurable platform style which allows each target platform to be either Material or Cupertino
+- Added more platform icons (thanks mlava)
+
+## [0.40.0] - May 07, 2020
+
+#### (Flutter version support: v1.17.0)
+
+- Update widget arguments to match latest flutter widgets.
+- Fixed issue with CupertinoPageScaffoldData (thanks josxha)
+- Removed deprecated fields (thanks fredgrott)
+- Added setIndex to PlatformTabScaffold (thanks	GillesMontyne)
+- Added more PlatformIcons (thanks mhaid)
+- Added CupertinoFilledButton (thanks eyecreate)
+
+## [0.32.5] - March 24, 2020
+
+#### (Flutter version support: v1.12.13+hotfix.5)
+
+- Fixed `PlatformButton` for android `FlatButton` to directly use color, disabledColor and padding properties that were missing
+
 ## [0.32.4] - January 21, 2020
 
 #### (Flutter version support: v1.12.13+hotfix.5)

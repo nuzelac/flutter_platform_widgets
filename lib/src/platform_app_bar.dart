@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart' show CupertinoNavigationBar;
 import 'package:flutter/material.dart' show AppBar, Brightness, TextTheme;
 import 'package:flutter/widgets.dart';
 
+import 'platform.dart';
 import 'widget_base.dart';
 
 //the default has alpha which will cause the content to slide under the header for ios
@@ -37,32 +38,36 @@ abstract class _BaseData {
 }
 
 class MaterialAppBarData extends _BaseData {
-  MaterialAppBarData(
-      {Widget title,
-      Color backgroundColor,
-      Widget leading,
-      Key widgetKey,
-      bool automaticallyImplyLeading,
-      this.actions,
-      this.bottom,
-      this.bottomOpacity,
-      this.brightness,
-      this.centerTitle,
-      this.elevation,
-      this.flexibleSpace,
-      this.iconTheme,
-      this.primary,
-      this.textTheme,
-      this.titleSpacing,
-      this.toolbarOpacity,
-      this.actionsIconTheme,
-      this.shape})
-      : super(
-            widgetKey: widgetKey,
-            title: title,
-            backgroundColor: backgroundColor,
-            leading: leading,
-            automaticallyImplyLeading: automaticallyImplyLeading);
+  MaterialAppBarData({
+    Widget title,
+    Color backgroundColor,
+    Widget leading,
+    Key widgetKey,
+    bool automaticallyImplyLeading,
+    this.actions,
+    this.bottom,
+    this.bottomOpacity,
+    this.brightness,
+    this.centerTitle,
+    this.elevation,
+    this.flexibleSpace,
+    this.iconTheme,
+    this.primary,
+    this.textTheme,
+    this.titleSpacing,
+    this.toolbarOpacity,
+    this.actionsIconTheme,
+    this.shape,
+    this.excludeHeaderSemantics,
+    this.shadowColor,
+    this.toolbarHeight,
+  }) : super(
+          widgetKey: widgetKey,
+          title: title,
+          backgroundColor: backgroundColor,
+          leading: leading,
+          automaticallyImplyLeading: automaticallyImplyLeading,
+        );
 
   final List<Widget> actions;
   final PreferredSizeWidget bottom;
@@ -79,6 +84,9 @@ class MaterialAppBarData extends _BaseData {
   final double toolbarOpacity;
   final IconThemeData actionsIconTheme;
   final ShapeBorder shape;
+  final bool excludeHeaderSemantics;
+  final Color shadowColor;
+  final double toolbarHeight;
 }
 
 class CupertinoNavigationBarData extends _BaseData {
@@ -95,6 +103,7 @@ class CupertinoNavigationBarData extends _BaseData {
       this.border,
       this.actionsForegroundColor,
       this.transitionBetweenRoutes,
+      this.brightness,
       this.heroTag})
       : super(
             widgetKey: widgetKey,
@@ -111,6 +120,7 @@ class CupertinoNavigationBarData extends _BaseData {
   final bool automaticallyImplyMiddle;
   final String previousPageTitle;
   final EdgeInsetsDirectional padding;
+  final Brightness brightness;
 }
 
 class PlatformAppBar
@@ -124,26 +134,32 @@ class PlatformAppBar
   final bool automaticallyImplyLeading;
 
   final PlatformBuilder<MaterialAppBarData> android;
+
   final PlatformBuilder<CupertinoNavigationBarData> ios;
 
-  PlatformAppBar(
-      {Key key,
-      this.widgetKey,
-      this.title,
-      this.backgroundColor,
-      this.leading,
-      this.trailingActions,
-      this.automaticallyImplyLeading,
-      this.android,
-      this.ios})
-      : super(key: key);
+  final PlatformBuilder2<MaterialAppBarData> material;
+  final PlatformBuilder2<CupertinoNavigationBarData> cupertino;
+
+  PlatformAppBar({
+    Key key,
+    this.widgetKey,
+    this.title,
+    this.backgroundColor,
+    this.leading,
+    this.trailingActions,
+    this.automaticallyImplyLeading,
+    @Deprecated('Use material argument. material: (context, platform) {}')
+        this.android,
+    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
+        this.ios,
+    this.material,
+    this.cupertino,
+  }) : super(key: key);
 
   @override
-  PreferredSizeWidget createAndroidWidget(BuildContext context) {
-    MaterialAppBarData data;
-    if (android != null) {
-      data = android(context);
-    }
+  PreferredSizeWidget createMaterialWidget(BuildContext context) {
+    final data =
+        android?.call(context) ?? material?.call(context, platform(context));
 
     return AppBar(
       key: data?.widgetKey ?? widgetKey,
@@ -166,19 +182,20 @@ class PlatformAppBar
       toolbarOpacity: data?.toolbarOpacity ?? 1.0,
       actionsIconTheme: data?.actionsIconTheme,
       shape: data?.shape,
+      excludeHeaderSemantics: data?.excludeHeaderSemantics ?? false,
+      shadowColor: data?.shadowColor,
+      toolbarHeight: data?.toolbarHeight,
     );
   }
 
   @override
-  CupertinoNavigationBar createIosWidget(BuildContext context) {
-    CupertinoNavigationBarData data;
-    if (ios != null) {
-      data = ios(context);
-    }
+  CupertinoNavigationBar createCupertinoWidget(BuildContext context) {
+    final data =
+        ios?.call(context) ?? cupertino?.call(context, platform(context));
 
     var trailing = trailingActions == null || trailingActions.isEmpty
         ? null
-        : new Row(
+        : Row(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: trailingActions,
@@ -200,6 +217,7 @@ class PlatformAppBar
         leading: data?.leading ?? leading,
         trailing: data?.trailing ?? trailing,
         transitionBetweenRoutes: data?.transitionBetweenRoutes ?? true,
+        brightness: data?.brightness,
         heroTag: data.heroTag,
       );
     }
@@ -218,6 +236,7 @@ class PlatformAppBar
       leading: data?.leading ?? leading,
       trailing: data?.trailing ?? trailing,
       transitionBetweenRoutes: data?.transitionBetweenRoutes ?? true,
+      brightness: data?.brightness,
     );
   }
 }

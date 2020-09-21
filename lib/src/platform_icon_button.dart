@@ -5,9 +5,11 @@
  */
 
 import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoColors;
-import 'package:flutter/material.dart' show IconButton;
+import 'package:flutter/material.dart' show IconButton, VisualDensity;
+import 'package:flutter/rendering.dart' show MouseCursor;
 import 'package:flutter/widgets.dart';
 
+import 'platform.dart';
 import 'widget_base.dart';
 
 const double _kMinInteractiveDimensionCupertino = 44.0;
@@ -71,13 +73,18 @@ class MaterialIconButtonData extends _BaseData {
     this.focusNode,
     this.autofocus,
     this.enableFeedback,
+    this.visualDensity,
+    this.constraints,
+    this.splashRadius,
+    this.mouseCursor,
   }) : super(
-            widgetKey: widgetKey,
-            icon: icon,
-            onPressed: onPressed,
-            padding: padding,
-            color: color,
-            disabledColor: disabledColor);
+          widgetKey: widgetKey,
+          icon: icon,
+          onPressed: onPressed,
+          padding: padding,
+          color: color,
+          disabledColor: disabledColor,
+        );
 
   final AlignmentGeometry alignment;
   final Color highlightColor;
@@ -89,46 +96,61 @@ class MaterialIconButtonData extends _BaseData {
   final FocusNode focusNode;
   final bool autofocus;
   final bool enableFeedback;
+  final VisualDensity visualDensity;
+  final BoxConstraints constraints;
+  final double splashRadius;
+  final MouseCursor mouseCursor;
 }
 
 class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
   final Key widgetKey;
 
   final Widget icon;
+  @Deprecated('Use cupertinoIcon argument instead')
   final Widget iosIcon;
+  @Deprecated('Use materialIcon argument instead')
   final Widget androidIcon;
+  final Widget cupertinoIcon;
+  final Widget materialIcon;
   final VoidCallback onPressed;
   final Color color;
   final EdgeInsets padding;
   final Color disabledColor;
 
+  @Deprecated('Use material argument. material: (context, platform) {}')
   final PlatformBuilder<MaterialIconButtonData> android;
+  @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
   final PlatformBuilder<CupertinoIconButtonData> ios;
 
-  PlatformIconButton(
-      {Key key,
-      this.widgetKey,
-      this.icon,
-      this.iosIcon,
-      this.androidIcon,
-      this.onPressed,
-      this.color,
-      this.disabledColor,
-      this.padding,
-      this.android,
-      this.ios})
-      : super(key: key);
+  final PlatformBuilder2<MaterialIconButtonData> material;
+  final PlatformBuilder2<CupertinoIconButtonData> cupertino;
+
+  PlatformIconButton({
+    Key key,
+    this.widgetKey,
+    this.icon,
+    this.iosIcon,
+    this.androidIcon,
+    this.cupertinoIcon,
+    this.materialIcon,
+    this.onPressed,
+    this.color,
+    this.disabledColor,
+    this.padding,
+    this.android,
+    this.ios,
+    this.material,
+    this.cupertino,
+  }) : super(key: key);
 
   @override
-  Widget createAndroidWidget(BuildContext context) {
-    MaterialIconButtonData data;
-    if (android != null) {
-      data = android(context);
-    }
+  Widget createMaterialWidget(BuildContext context) {
+    final data =
+        android?.call(context) ?? material?.call(context, platform(context));
 
     return IconButton(
       key: data?.widgetKey ?? widgetKey,
-      icon: data?.icon ?? androidIcon ?? icon,
+      icon: data?.icon ?? materialIcon ?? androidIcon ?? icon,
       onPressed: data?.onPressed ?? onPressed,
       padding: data?.padding ?? padding ?? const EdgeInsets.all(8.0),
       color: data?.color ?? color,
@@ -143,19 +165,21 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
       hoverColor: data?.hoverColor,
       autofocus: data?.autofocus ?? false,
       enableFeedback: data?.enableFeedback ?? true,
+      visualDensity: data?.visualDensity,
+      constraints: data?.constraints,
+      splashRadius: data?.splashRadius,
+      mouseCursor: data?.mouseCursor,
     );
   }
 
   @override
-  CupertinoButton createIosWidget(BuildContext context) {
-    CupertinoIconButtonData data;
-    if (ios != null) {
-      data = ios(context);
-    }
+  CupertinoButton createCupertinoWidget(BuildContext context) {
+    final data =
+        ios?.call(context) ?? cupertino?.call(context, platform(context));
 
     return CupertinoButton(
       key: data?.widgetKey ?? widgetKey,
-      child: data?.icon ?? iosIcon ?? icon,
+      child: data?.icon ?? cupertinoIcon ?? iosIcon ?? icon,
       onPressed: data?.onPressed ?? onPressed,
       padding: data?.padding ?? padding,
       color: data?.color ?? color,

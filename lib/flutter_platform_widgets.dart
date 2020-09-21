@@ -7,7 +7,12 @@
 library flutter_platform_widgets;
 
 export 'src/platform.dart'
-    show isCupertino, isMaterial, showPlatformDialog, showPlatformModalSheet;
+    show
+        isCupertino,
+        isMaterial,
+        platform,
+        showPlatformDialog,
+        showPlatformModalSheet;
 export 'src/platform_alert_dialog.dart';
 export 'src/platform_app.dart';
 export 'src/platform_app_bar.dart';
@@ -26,4 +31,5 @@ export 'src/platform_tab_scaffold.dart';
 export 'src/platform_text.dart';
 export 'src/platform_text_field.dart';
 export 'src/platform_widget.dart';
+export 'src/platform_widget_builder.dart';
 export 'src/widget_base.dart';

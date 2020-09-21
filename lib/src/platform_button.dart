@@ -7,14 +7,17 @@
 import 'package:flutter/cupertino.dart' show CupertinoButton, CupertinoColors;
 import 'package:flutter/material.dart'
     show
-        MaterialButton,
-        FlatButton,
-        RaisedButton,
         Brightness,
         ButtonTextTheme,
-        MaterialTapTargetSize;
+        FlatButton,
+        MaterialButton,
+        MaterialTapTargetSize,
+        RaisedButton,
+        VisualDensity;
+import 'package:flutter/rendering.dart' show MouseCursor;
 import 'package:flutter/widgets.dart';
 
+import 'platform.dart';
 import 'widget_base.dart';
 
 const double _kMinInteractiveDimensionCupertino = 44.0;
@@ -37,41 +40,44 @@ abstract class _BaseData {
 }
 
 class MaterialFlatButtonData extends _BaseData {
-  MaterialFlatButtonData(
-      {Key widgetKey,
-      Widget child,
-      Color color,
-      VoidCallback onPressed,
-      EdgeInsetsGeometry padding,
-      Color disabledColor,
-      this.animationDuration,
-      this.colorBrightness,
-      this.disabledElevation,
-      this.disabledTextColor,
-      this.elevation,
-      this.highlightColor,
-      this.highlightElevation,
-      this.onHighlightChanged,
-      this.shape,
-      this.splashColor,
-      this.textColor,
-      this.textTheme,
-      this.clipBehavior,
-      this.materialTapTargetSize,
-      this.focusElevation,
-      this.focusColor,
-      this.hoverColor,
-      this.focusNode,
-      this.hoverElevation,
-      this.autofocus,
-      this.onLongPress})
-      : super(
-            widgetKey: widgetKey,
-            child: child,
-            color: color,
-            onPressed: onPressed,
-            padding: padding,
-            disabledColor: disabledColor);
+  MaterialFlatButtonData({
+    Key widgetKey,
+    Widget child,
+    Color color,
+    VoidCallback onPressed,
+    EdgeInsetsGeometry padding,
+    Color disabledColor,
+    this.animationDuration,
+    this.colorBrightness,
+    this.disabledElevation,
+    this.disabledTextColor,
+    this.elevation,
+    this.highlightColor,
+    this.highlightElevation,
+    this.onHighlightChanged,
+    this.shape,
+    this.splashColor,
+    this.textColor,
+    this.textTheme,
+    this.clipBehavior,
+    this.materialTapTargetSize,
+    this.focusElevation,
+    this.focusColor,
+    this.hoverColor,
+    this.focusNode,
+    this.hoverElevation,
+    this.autofocus,
+    this.onLongPress,
+    this.visualDensity,
+    this.mouseCursor,
+  }) : super(
+          widgetKey: widgetKey,
+          child: child,
+          color: color,
+          onPressed: onPressed,
+          padding: padding,
+          disabledColor: disabledColor,
+        );
 
   final Duration animationDuration;
   final Brightness colorBrightness;
@@ -95,44 +101,49 @@ class MaterialFlatButtonData extends _BaseData {
   final double hoverElevation;
   final bool autofocus;
   final VoidCallback onLongPress;
+  final VisualDensity visualDensity;
+  final MouseCursor mouseCursor;
 }
 
 class MaterialRaisedButtonData extends _BaseData {
-  MaterialRaisedButtonData(
-      {Key widgetKey,
-      Widget child,
-      Color color,
-      VoidCallback onPressed,
-      EdgeInsetsGeometry padding,
-      Color disabledColor,
-      this.animationDuration,
-      this.colorBrightness,
-      this.disabledElevation,
-      this.disabledTextColor,
-      this.elevation,
-      this.highlightColor,
-      this.highlightElevation,
-      this.onHighlightChanged,
-      this.shape,
-      this.splashColor,
-      this.textColor,
-      this.textTheme,
-      this.clipBehavior,
-      this.materialTapTargetSize,
-      this.focusElevation,
-      this.focusColor,
-      this.hoverColor,
-      this.focusNode,
-      this.hoverElevation,
-      this.autofocus,
-      this.onLongPress})
-      : super(
-            widgetKey: widgetKey,
-            child: child,
-            color: color,
-            onPressed: onPressed,
-            padding: padding,
-            disabledColor: disabledColor);
+  MaterialRaisedButtonData({
+    Key widgetKey,
+    Widget child,
+    Color color,
+    VoidCallback onPressed,
+    EdgeInsetsGeometry padding,
+    Color disabledColor,
+    this.animationDuration,
+    this.colorBrightness,
+    this.disabledElevation,
+    this.disabledTextColor,
+    this.elevation,
+    this.highlightColor,
+    this.highlightElevation,
+    this.onHighlightChanged,
+    this.shape,
+    this.splashColor,
+    this.textColor,
+    this.textTheme,
+    this.clipBehavior,
+    this.materialTapTargetSize,
+    this.focusElevation,
+    this.focusColor,
+    this.hoverColor,
+    this.focusNode,
+    this.hoverElevation,
+    this.autofocus,
+    this.onLongPress,
+    this.visualDensity,
+    this.mouseCursor,
+  }) : super(
+          widgetKey: widgetKey,
+          child: child,
+          color: color,
+          onPressed: onPressed,
+          padding: padding,
+          disabledColor: disabledColor,
+        );
 
   final Duration animationDuration;
   final Brightness colorBrightness;
@@ -156,23 +167,47 @@ class MaterialRaisedButtonData extends _BaseData {
   final double hoverElevation;
   final bool autofocus;
   final VoidCallback onLongPress;
+  final VisualDensity visualDensity;
+  final MouseCursor mouseCursor;
 }
 
 class CupertinoButtonData extends _BaseData {
-  CupertinoButtonData(
-      {Key widgetKey,
-      Widget child,
-      Color color,
-      VoidCallback onPressed,
-      EdgeInsetsGeometry padding,
-      Color disabledColor,
-      this.borderRadius,
-      this.minSize,
-      this.pressedOpacity})
-      : super(
+  CupertinoButtonData({
+    Key widgetKey,
+    Widget child,
+    Color color,
+    VoidCallback onPressed,
+    EdgeInsetsGeometry padding,
+    Color disabledColor,
+    this.borderRadius,
+    this.minSize,
+    this.pressedOpacity,
+  }) : super(
             widgetKey: widgetKey,
             child: child,
             color: color,
+            onPressed: onPressed,
+            padding: padding,
+            disabledColor: disabledColor);
+
+  final BorderRadius borderRadius;
+  final double minSize;
+  final double pressedOpacity;
+}
+
+class CupertinoFilledButtonData extends _BaseData {
+  CupertinoFilledButtonData({
+    Key widgetKey,
+    Widget child,
+    VoidCallback onPressed,
+    EdgeInsetsGeometry padding,
+    Color disabledColor,
+    this.borderRadius,
+    this.minSize,
+    this.pressedOpacity,
+  }) : super(
+            widgetKey: widgetKey,
+            child: child,
             onPressed: onPressed,
             padding: padding,
             disabledColor: disabledColor);
@@ -195,37 +230,53 @@ class PlatformButton
   final PlatformBuilder<MaterialRaisedButtonData> android;
   final PlatformBuilder<MaterialFlatButtonData> androidFlat;
   final PlatformBuilder<CupertinoButtonData> ios;
+  final PlatformBuilder<CupertinoFilledButtonData> iosFilled;
 
-  PlatformButton(
-      {Key key,
-      this.widgetKey,
-      this.child,
-      this.onPressed,
-      this.color,
-      this.disabledColor,
-      this.padding,
-      this.android,
-      this.androidFlat,
-      this.ios})
-      : assert(androidFlat == null || android == null),
+  final PlatformBuilder2<MaterialRaisedButtonData> material;
+  final PlatformBuilder2<MaterialFlatButtonData> materialFlat;
+  final PlatformBuilder2<CupertinoButtonData> cupertino;
+  final PlatformBuilder2<CupertinoFilledButtonData> cupertinoFilled;
+
+  PlatformButton({
+    Key key,
+    this.widgetKey,
+    this.child,
+    this.onPressed,
+    this.color,
+    this.disabledColor,
+    this.padding,
+    @Deprecated('Use material argument. material: (context, platform) {}')
+        this.android,
+    @Deprecated('Use materialFlat argument. materialFlat: (context, platform) {}')
+        this.androidFlat,
+    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
+        this.ios,
+    @Deprecated('Use cupertinoFilled argument. cupertinoFilled: (context, platform) {}')
+        this.iosFilled,
+    this.material,
+    this.materialFlat,
+    this.cupertino,
+    this.cupertinoFilled,
+  })  : assert(androidFlat == null || android == null),
         super(key: key);
 
   @override
-  MaterialButton createAndroidWidget(BuildContext context) {
-    if (androidFlat != null) {
-      MaterialFlatButtonData dataFlat = androidFlat(context);
+  MaterialButton createMaterialWidget(BuildContext context) {
+    if (androidFlat != null || materialFlat != null) {
+      final dataFlat = androidFlat?.call(context) ??
+          materialFlat(context, platform(context));
 
       return FlatButton(
         key: dataFlat?.widgetKey ?? widgetKey,
         child: dataFlat?.child ?? child,
         onPressed: dataFlat?.onPressed ?? onPressed,
-        color: dataFlat?.color,
+        color: dataFlat?.color ?? color,
         colorBrightness: dataFlat?.colorBrightness,
-        disabledColor: dataFlat?.disabledColor,
+        disabledColor: dataFlat?.disabledColor ?? disabledColor,
         disabledTextColor: dataFlat?.disabledTextColor,
         highlightColor: dataFlat?.highlightColor,
         onHighlightChanged: dataFlat?.onHighlightChanged,
-        padding: dataFlat?.padding,
+        padding: dataFlat?.padding ?? padding,
         shape: dataFlat?.shape,
         splashColor: dataFlat?.splashColor,
         textColor: dataFlat?.textColor,
@@ -237,13 +288,13 @@ class PlatformButton
         hoverColor: dataFlat?.hoverColor,
         autofocus: dataFlat?.autofocus ?? false,
         onLongPress: dataFlat?.onLongPress,
+        visualDensity: dataFlat?.visualDensity,
+        mouseCursor: dataFlat?.mouseCursor,
       );
     }
 
-    MaterialRaisedButtonData dataRaised;
-    if (android != null) {
-      dataRaised = android(context);
-    }
+    final dataRaised =
+        android?.call(context) ?? material?.call(context, platform(context));
 
     return RaisedButton(
       key: dataRaised?.widgetKey ?? widgetKey,
@@ -273,15 +324,34 @@ class PlatformButton
       hoverElevation: dataRaised?.hoverElevation,
       autofocus: dataRaised?.autofocus ?? false,
       onLongPress: dataRaised?.onLongPress,
+      visualDensity: dataRaised?.visualDensity,
+      mouseCursor: dataRaised?.mouseCursor,
     );
   }
 
   @override
-  CupertinoButton createIosWidget(BuildContext context) {
-    CupertinoButtonData data;
-    if (ios != null) {
-      data = ios(context);
+  CupertinoButton createCupertinoWidget(BuildContext context) {
+    if (iosFilled != null || cupertinoFilled != null) {
+      final filledData = iosFilled?.call(context) ??
+          cupertinoFilled(context, platform(context));
+
+      return CupertinoButton.filled(
+        key: filledData?.widgetKey ?? widgetKey,
+        child: filledData?.child ?? child,
+        onPressed: filledData?.onPressed ?? onPressed,
+        borderRadius: filledData?.borderRadius ??
+            const BorderRadius.all(const Radius.circular(8.0)),
+        minSize: filledData?.minSize ?? _kMinInteractiveDimensionCupertino,
+        padding: filledData?.padding ?? padding,
+        pressedOpacity: filledData?.pressedOpacity ?? 0.4,
+        disabledColor: filledData?.disabledColor ??
+            disabledColor ??
+            CupertinoColors.quaternarySystemFill,
+      );
     }
+
+    final data =
+        ios?.call(context) ?? cupertino?.call(context, platform(context));
 
     return CupertinoButton(
       key: data?.widgetKey ?? widgetKey,

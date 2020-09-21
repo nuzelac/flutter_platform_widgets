@@ -9,32 +9,37 @@ import 'package:flutter/material.dart'
     show MaterialApp, Theme, ThemeData, ThemeMode;
 import 'package:flutter/widgets.dart';
 
+import 'platform.dart';
 import 'widget_base.dart';
 
 abstract class _BaseData {
-  _BaseData(
-      {this.widgetKey,
-      this.navigatorKey,
-      this.home,
-      this.routes,
-      this.initialRoute,
-      this.onGenerateRoute,
-      this.onUnknownRoute,
-      this.navigatorObservers,
-      this.builder,
-      this.title,
-      this.onGenerateTitle,
-      this.color,
-      this.locale,
-      this.localizationsDelegates,
-      this.localeListResolutionCallback,
-      this.localeResolutionCallback,
-      this.supportedLocales,
-      this.showPerformanceOverlay,
-      this.checkerboardRasterCacheImages,
-      this.checkerboardOffscreenLayers,
-      this.showSemanticsDebugger,
-      this.debugShowCheckedModeBanner});
+  _BaseData({
+    this.widgetKey,
+    this.navigatorKey,
+    this.home,
+    this.routes,
+    this.initialRoute,
+    this.onGenerateRoute,
+    this.onUnknownRoute,
+    this.navigatorObservers,
+    this.builder,
+    this.title,
+    this.onGenerateTitle,
+    this.color,
+    this.locale,
+    this.localizationsDelegates,
+    this.localeListResolutionCallback,
+    this.localeResolutionCallback,
+    this.supportedLocales,
+    this.showPerformanceOverlay,
+    this.checkerboardRasterCacheImages,
+    this.checkerboardOffscreenLayers,
+    this.showSemanticsDebugger,
+    this.debugShowCheckedModeBanner,
+    this.shortcuts,
+    this.actions,
+    this.onGenerateInitialRoutes,
+  });
 
   final Key widgetKey;
   final GlobalKey<NavigatorState> navigatorKey;
@@ -58,6 +63,9 @@ abstract class _BaseData {
   final bool checkerboardOffscreenLayers;
   final bool showSemanticsDebugger;
   final bool debugShowCheckedModeBanner;
+  final Map<LogicalKeySet, Intent> shortcuts;
+  final Map<Type, Action<Intent>> actions;
+  final InitialRouteListFactory onGenerateInitialRoutes;
 }
 
 class MaterialAppData extends _BaseData {
@@ -84,33 +92,40 @@ class MaterialAppData extends _BaseData {
       bool checkerboardOffscreenLayers,
       bool showSemanticsDebugger,
       bool debugShowCheckedModeBanner,
+      Map<LogicalKeySet, Intent> shortcuts,
+      Map<Type, Action<Intent>> actions,
+      InitialRouteListFactory onGenerateInitialRoutes,
       this.theme,
       this.debugShowMaterialGrid,
       this.darkTheme,
       this.themeMode})
       : super(
-            widgetKey: widgetKey,
-            navigatorKey: navigatorKey,
-            home: home,
-            routes: routes,
-            initialRoute: initialRoute,
-            onGenerateRoute: onGenerateRoute,
-            onUnknownRoute: onUnknownRoute,
-            navigatorObservers: navigatorObservers,
-            builder: builder,
-            title: title,
-            onGenerateTitle: onGenerateTitle,
-            color: color,
-            locale: locale,
-            localizationsDelegates: localizationsDelegates,
-            localeListResolutionCallback: localeListResolutionCallback,
-            localeResolutionCallback: localeResolutionCallback,
-            supportedLocales: supportedLocales,
-            showPerformanceOverlay: showPerformanceOverlay,
-            checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-            checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-            showSemanticsDebugger: showSemanticsDebugger,
-            debugShowCheckedModeBanner: debugShowCheckedModeBanner);
+          widgetKey: widgetKey,
+          navigatorKey: navigatorKey,
+          home: home,
+          routes: routes,
+          initialRoute: initialRoute,
+          onGenerateRoute: onGenerateRoute,
+          onUnknownRoute: onUnknownRoute,
+          navigatorObservers: navigatorObservers,
+          builder: builder,
+          title: title,
+          onGenerateTitle: onGenerateTitle,
+          color: color,
+          locale: locale,
+          localizationsDelegates: localizationsDelegates,
+          localeListResolutionCallback: localeListResolutionCallback,
+          localeResolutionCallback: localeResolutionCallback,
+          supportedLocales: supportedLocales,
+          showPerformanceOverlay: showPerformanceOverlay,
+          checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+          checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+          showSemanticsDebugger: showSemanticsDebugger,
+          debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+          shortcuts: shortcuts,
+          actions: actions,
+          onGenerateInitialRoutes: onGenerateInitialRoutes,
+        );
 
   final ThemeData theme;
   final bool debugShowMaterialGrid;
@@ -133,6 +148,9 @@ class CupertinoAppData extends _BaseData {
       GenerateAppTitle onGenerateTitle,
       Color color,
       Locale locale,
+      Map<LogicalKeySet, Intent> shortcuts,
+      Map<Type, Action<Intent>> actions,
+      InitialRouteListFactory onGenerateInitialRoutes,
       Iterable<LocalizationsDelegate<dynamic>> localizationsDelegates,
       LocaleListResolutionCallback localeListResolutionCallback,
       LocaleResolutionCallback localeResolutionCallback,
@@ -144,28 +162,32 @@ class CupertinoAppData extends _BaseData {
       bool debugShowCheckedModeBanner,
       this.theme})
       : super(
-            widgetKey: widgetKey,
-            navigatorKey: navigatorKey,
-            home: home,
-            routes: routes,
-            initialRoute: initialRoute,
-            onGenerateRoute: onGenerateRoute,
-            onUnknownRoute: onUnknownRoute,
-            navigatorObservers: navigatorObservers,
-            builder: builder,
-            title: title,
-            onGenerateTitle: onGenerateTitle,
-            color: color,
-            locale: locale,
-            localizationsDelegates: localizationsDelegates,
-            localeListResolutionCallback: localeListResolutionCallback,
-            localeResolutionCallback: localeResolutionCallback,
-            supportedLocales: supportedLocales,
-            showPerformanceOverlay: showPerformanceOverlay,
-            checkerboardRasterCacheImages: checkerboardRasterCacheImages,
-            checkerboardOffscreenLayers: checkerboardOffscreenLayers,
-            showSemanticsDebugger: showSemanticsDebugger,
-            debugShowCheckedModeBanner: debugShowCheckedModeBanner);
+          widgetKey: widgetKey,
+          navigatorKey: navigatorKey,
+          home: home,
+          routes: routes,
+          initialRoute: initialRoute,
+          onGenerateRoute: onGenerateRoute,
+          onUnknownRoute: onUnknownRoute,
+          navigatorObservers: navigatorObservers,
+          builder: builder,
+          title: title,
+          onGenerateTitle: onGenerateTitle,
+          color: color,
+          locale: locale,
+          localizationsDelegates: localizationsDelegates,
+          localeListResolutionCallback: localeListResolutionCallback,
+          localeResolutionCallback: localeResolutionCallback,
+          supportedLocales: supportedLocales,
+          showPerformanceOverlay: showPerformanceOverlay,
+          checkerboardRasterCacheImages: checkerboardRasterCacheImages,
+          checkerboardOffscreenLayers: checkerboardOffscreenLayers,
+          showSemanticsDebugger: showSemanticsDebugger,
+          debugShowCheckedModeBanner: debugShowCheckedModeBanner,
+          shortcuts: shortcuts,
+          actions: actions,
+          onGenerateInitialRoutes: onGenerateInitialRoutes,
+        );
 
   final CupertinoThemeData theme;
 }
@@ -193,44 +215,55 @@ class PlatformApp extends PlatformWidgetBase<CupertinoApp, MaterialApp> {
   final bool checkerboardOffscreenLayers;
   final bool showSemanticsDebugger;
   final bool debugShowCheckedModeBanner;
+  final Map<LogicalKeySet, Intent> shortcuts;
+  final Map<Type, Action<Intent>> actions;
+  final InitialRouteListFactory onGenerateInitialRoutes;
 
   final PlatformBuilder<MaterialAppData> android;
   final PlatformBuilder<CupertinoAppData> ios;
 
-  PlatformApp(
-      {Key key,
-      this.widgetKey,
-      this.navigatorKey,
-      this.home,
-      this.routes,
-      this.initialRoute,
-      this.onGenerateRoute,
-      this.onUnknownRoute,
-      this.navigatorObservers,
-      this.builder,
-      this.title,
-      this.onGenerateTitle,
-      this.color,
-      this.locale,
-      this.localizationsDelegates,
-      this.localeListResolutionCallback,
-      this.localeResolutionCallback,
-      this.supportedLocales,
-      this.showPerformanceOverlay,
-      this.checkerboardRasterCacheImages,
-      this.checkerboardOffscreenLayers,
-      this.showSemanticsDebugger,
-      this.debugShowCheckedModeBanner,
-      this.android,
-      this.ios})
-      : super(key: key);
+  final PlatformBuilder2<MaterialAppData> material;
+  final PlatformBuilder2<CupertinoAppData> cupertino;
+
+  PlatformApp({
+    Key key,
+    this.widgetKey,
+    this.navigatorKey,
+    this.home,
+    this.routes,
+    this.initialRoute,
+    this.onGenerateRoute,
+    this.onUnknownRoute,
+    this.navigatorObservers,
+    this.builder,
+    this.title,
+    this.onGenerateTitle,
+    this.color,
+    this.locale,
+    this.localizationsDelegates,
+    this.localeListResolutionCallback,
+    this.localeResolutionCallback,
+    this.supportedLocales,
+    this.showPerformanceOverlay,
+    this.checkerboardRasterCacheImages,
+    this.checkerboardOffscreenLayers,
+    this.showSemanticsDebugger,
+    this.debugShowCheckedModeBanner,
+    this.shortcuts,
+    this.actions,
+    this.onGenerateInitialRoutes,
+    @Deprecated('Use material argument. material: (context, platform) {}')
+        this.android,
+    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
+        this.ios,
+    this.material,
+    this.cupertino,
+  }) : super(key: key);
 
   @override
-  createAndroidWidget(BuildContext context) {
-    MaterialAppData data;
-    if (android != null) {
-      data = android(context);
-    }
+  createMaterialWidget(BuildContext context) {
+    final data =
+        android?.call(context) ?? material?.call(context, platform(context));
 
     return MaterialApp(
       key: data?.widgetKey ?? widgetKey,
@@ -275,15 +308,17 @@ class PlatformApp extends PlatformWidgetBase<CupertinoApp, MaterialApp> {
       debugShowMaterialGrid: data?.debugShowMaterialGrid ?? false,
       darkTheme: data?.darkTheme?.copyWith(platform: TargetPlatform.android),
       themeMode: data?.themeMode ?? ThemeMode.system,
+      shortcuts: data?.shortcuts ?? shortcuts,
+      actions: data?.actions ?? actions,
+      onGenerateInitialRoutes:
+          data?.onGenerateInitialRoutes ?? onGenerateInitialRoutes,
     );
   }
 
   @override
-  createIosWidget(BuildContext context) {
-    CupertinoAppData data;
-    if (ios != null) {
-      data = ios(context);
-    }
+  createCupertinoWidget(BuildContext context) {
+    final data =
+        ios?.call(context) ?? cupertino?.call(context, platform(context));
 
     return CupertinoApp(
       key: data?.widgetKey ?? widgetKey,
@@ -324,6 +359,10 @@ class PlatformApp extends PlatformWidgetBase<CupertinoApp, MaterialApp> {
           debugShowCheckedModeBanner ??
           true,
       theme: data?.theme,
+      shortcuts: data?.shortcuts ?? shortcuts,
+      actions: data?.actions ?? actions,
+      onGenerateInitialRoutes:
+          data?.onGenerateInitialRoutes ?? onGenerateInitialRoutes,
     );
   }
 }
