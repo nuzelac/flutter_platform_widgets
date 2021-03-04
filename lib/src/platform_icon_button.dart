@@ -41,7 +41,8 @@ class CupertinoIconButtonData extends _BaseData {
       Color disabledColor,
       this.borderRadius,
       this.minSize,
-      this.pressedOpacity})
+      this.pressedOpacity,
+      this.alignment})
       : super(
             widgetKey: widgetKey,
             icon: icon,
@@ -53,6 +54,7 @@ class CupertinoIconButtonData extends _BaseData {
   final BorderRadius borderRadius;
   final double minSize;
   final double pressedOpacity;
+  final AlignmentGeometry alignment;
 }
 
 class MaterialIconButtonData extends _BaseData {
@@ -106,10 +108,6 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
   final Key widgetKey;
 
   final Widget icon;
-  @Deprecated('Use cupertinoIcon argument instead')
-  final Widget iosIcon;
-  @Deprecated('Use materialIcon argument instead')
-  final Widget androidIcon;
   final Widget cupertinoIcon;
   final Widget materialIcon;
   final VoidCallback onPressed;
@@ -117,40 +115,30 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
   final EdgeInsets padding;
   final Color disabledColor;
 
-  @Deprecated('Use material argument. material: (context, platform) {}')
-  final PlatformBuilder<MaterialIconButtonData> android;
-  @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
-  final PlatformBuilder<CupertinoIconButtonData> ios;
-
-  final PlatformBuilder2<MaterialIconButtonData> material;
-  final PlatformBuilder2<CupertinoIconButtonData> cupertino;
+  final PlatformBuilder<MaterialIconButtonData> material;
+  final PlatformBuilder<CupertinoIconButtonData> cupertino;
 
   PlatformIconButton({
     Key key,
     this.widgetKey,
     this.icon,
-    this.iosIcon,
-    this.androidIcon,
     this.cupertinoIcon,
     this.materialIcon,
     this.onPressed,
     this.color,
     this.disabledColor,
     this.padding,
-    this.android,
-    this.ios,
     this.material,
     this.cupertino,
   }) : super(key: key);
 
   @override
   Widget createMaterialWidget(BuildContext context) {
-    final data =
-        android?.call(context) ?? material?.call(context, platform(context));
+    final data = material?.call(context, platform(context));
 
     return IconButton(
       key: data?.widgetKey ?? widgetKey,
-      icon: data?.icon ?? materialIcon ?? androidIcon ?? icon,
+      icon: data?.icon ?? materialIcon ?? icon,
       onPressed: data?.onPressed ?? onPressed,
       padding: data?.padding ?? padding ?? const EdgeInsets.all(8.0),
       color: data?.color ?? color,
@@ -174,12 +162,11 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
 
   @override
   CupertinoButton createCupertinoWidget(BuildContext context) {
-    final data =
-        ios?.call(context) ?? cupertino?.call(context, platform(context));
+    final data = cupertino?.call(context, platform(context));
 
     return CupertinoButton(
       key: data?.widgetKey ?? widgetKey,
-      child: data?.icon ?? cupertinoIcon ?? iosIcon ?? icon,
+      child: data?.icon ?? cupertinoIcon ?? icon,
       onPressed: data?.onPressed ?? onPressed,
       padding: data?.padding ?? padding,
       color: data?.color ?? color,
@@ -190,6 +177,7 @@ class PlatformIconButton extends PlatformWidgetBase<CupertinoButton, Widget> {
       disabledColor: data?.disabledColor ??
           disabledColor ??
           CupertinoColors.quaternarySystemFill,
+      alignment: data?.alignment ?? Alignment.center,
     );
   }
 }

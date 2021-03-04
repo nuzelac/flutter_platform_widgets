@@ -23,6 +23,7 @@ import 'package:flutter/services.dart'
         TextInputType,
         TextInputAction,
         TextCapitalization;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
@@ -102,6 +103,11 @@ class MaterialTextFieldData {
     this.obscuringCharacter,
     this.autofillHints,
     this.mouseCursor,
+    this.onAppPrivateCommand,
+    this.cursorHeight,
+    this.restorationId,
+    this.maxLengthEnforcement,
+    this.selectionControls,
   });
 
   final Key widgetKey;
@@ -119,6 +125,9 @@ class MaterialTextFieldData {
   final bool autocorrect;
   final int maxLines;
   final int maxLength;
+  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
+      'behavior related to the maxLength limit. '
+      'This feature was deprecated after v1.25.0-5.0.pre.')
   final bool maxLengthEnforced;
   final ValueChanged<String> onChanged;
   final VoidCallback onEditingComplete;
@@ -151,6 +160,11 @@ class MaterialTextFieldData {
   final String obscuringCharacter;
   final Iterable<String> autofillHints;
   final MouseCursor mouseCursor;
+  final AppPrivateCommandCallback onAppPrivateCommand;
+  final double cursorHeight;
+  final String restorationId;
+  final MaxLengthEnforcement maxLengthEnforcement;
+  final TextSelectionControls selectionControls;
 }
 
 class CupertinoTextFieldData {
@@ -207,6 +221,10 @@ class CupertinoTextFieldData {
     this.selectionWidthStyle,
     this.obscuringCharacter,
     this.autofillHints,
+    this.cursorHeight,
+    this.restorationId,
+    this.maxLengthEnforcement,
+    this.selectionControls,
   });
 
   final Key widgetKey;
@@ -231,6 +249,9 @@ class CupertinoTextFieldData {
   final bool autocorrect;
   final int maxLines;
   final int maxLength;
+  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
+      'behavior related to the maxLength limit. '
+      'This feature was deprecated after v1.25.0-5.0.pre.')
   final bool maxLengthEnforced;
   final ValueChanged<String> onChanged;
   final VoidCallback onEditingComplete;
@@ -261,17 +282,18 @@ class CupertinoTextFieldData {
   final ui.BoxWidthStyle selectionWidthStyle;
   final String obscuringCharacter;
   final Iterable<String> autofillHints;
+  final double cursorHeight;
+  final String restorationId;
+  final MaxLengthEnforcement maxLengthEnforcement;
+  final TextSelectionControls selectionControls;
 }
 
 class PlatformTextField
     extends PlatformWidgetBase<CupertinoTextField, TextField> {
   final Key widgetKey;
 
-  final PlatformBuilder<MaterialTextFieldData> android;
-  final PlatformBuilder<CupertinoTextFieldData> ios;
-
-  final PlatformBuilder2<MaterialTextFieldData> material;
-  final PlatformBuilder2<CupertinoTextFieldData> cupertino;
+  final PlatformBuilder<MaterialTextFieldData> material;
+  final PlatformBuilder<CupertinoTextFieldData> cupertino;
 
   final TextEditingController controller;
   final FocusNode focusNode;
@@ -287,6 +309,9 @@ class PlatformTextField
   final bool autocorrect;
   final int maxLines;
   final int maxLength;
+  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
+      'behavior related to the maxLength limit. '
+      'This feature was deprecated after v1.25.0-5.0.pre.')
   final bool maxLengthEnforced;
 
   final ValueChanged<String> onChanged;
@@ -320,6 +345,12 @@ class PlatformTextField
 
   final String obscuringCharacter;
   final Iterable<String> autofillHints;
+
+  final double cursorHeight;
+  final String restorationId;
+
+  final MaxLengthEnforcement maxLengthEnforcement;
+  final TextSelectionControls selectionControls;
 
   PlatformTextField({
     Key key,
@@ -365,10 +396,10 @@ class PlatformTextField
     this.selectionWidthStyle,
     this.obscuringCharacter,
     this.autofillHints,
-    @Deprecated('Use material argument. material: (context, platform) {}')
-        this.android,
-    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
-        this.ios,
+    this.cursorHeight,
+    this.restorationId,
+    this.maxLengthEnforcement,
+    this.selectionControls,
     this.material,
     this.cupertino,
   })  : keyboardType = keyboardType ??
@@ -377,8 +408,7 @@ class PlatformTextField
 
   @override
   TextField createMaterialWidget(BuildContext context) {
-    final data =
-        android?.call(context) ?? material?.call(context, platform(context));
+    final data = material?.call(context, platform(context));
 
     return TextField(
       key: data?.widgetKey ?? widgetKey,
@@ -439,13 +469,17 @@ class PlatformTextField
       obscuringCharacter: data?.obscuringCharacter ?? obscuringCharacter ?? '•',
       autofillHints: data?.autofillHints ?? autofillHints,
       mouseCursor: data?.mouseCursor ?? MouseCursor.defer,
+      onAppPrivateCommand: data?.onAppPrivateCommand,
+      cursorHeight: data?.cursorHeight ?? cursorHeight,
+      restorationId: data?.restorationId ?? restorationId,
+      maxLengthEnforcement: data?.maxLengthEnforcement ?? maxLengthEnforcement,
+      selectionControls: data?.selectionControls ?? selectionControls,
     );
   }
 
   @override
   CupertinoTextField createCupertinoWidget(BuildContext context) {
-    final data =
-        ios?.call(context) ?? cupertino?.call(context, platform(context));
+    final data = cupertino?.call(context, platform(context));
 
     return CupertinoTextField(
       key: data?.widgetKey ?? widgetKey,
@@ -517,6 +551,10 @@ class PlatformTextField
           ui.BoxWidthStyle.tight,
       obscuringCharacter: data?.obscuringCharacter ?? obscuringCharacter ?? '•',
       autofillHints: data?.autofillHints ?? autofillHints,
+      cursorHeight: data?.cursorHeight ?? cursorHeight,
+      restorationId: data?.restorationId ?? restorationId,
+      maxLengthEnforcement: data?.maxLengthEnforcement ?? maxLengthEnforcement,
+      selectionControls: data?.selectionControls ?? selectionControls,
     );
   }
 }

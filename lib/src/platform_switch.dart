@@ -6,7 +6,8 @@
 
 import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart' show Switch, MaterialTapTargetSize;
+import 'package:flutter/material.dart'
+    show MaterialStateProperty, MaterialTapTargetSize, Switch;
 import 'package:flutter/rendering.dart' show MouseCursor;
 import 'package:flutter/widgets.dart';
 
@@ -50,6 +51,10 @@ class MaterialSwitchData extends _BaseData {
     this.onActiveThumbImageError,
     this.onInactiveThumbImageError,
     this.mouseCursor,
+    this.overlayColor,
+    this.splashRadius,
+    this.thumbColor,
+    this.trackColor,
   }) : super(
           widgetKey: widgetKey,
           value: value,
@@ -71,6 +76,10 @@ class MaterialSwitchData extends _BaseData {
   final ImageErrorListener onActiveThumbImageError;
   final ImageErrorListener onInactiveThumbImageError;
   final MouseCursor mouseCursor;
+  final MaterialStateProperty<Color> overlayColor;
+  final double splashRadius;
+  final MaterialStateProperty<Color> thumbColor;
+  final MaterialStateProperty<Color> trackColor;
 }
 
 class CupertinoSwitchData extends _BaseData {
@@ -100,11 +109,8 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
   final ValueChanged<bool> onChanged;
   final DragStartBehavior dragStartBehavior;
 
-  final PlatformBuilder<MaterialSwitchData> android;
-  final PlatformBuilder<CupertinoSwitchData> ios;
-
-  final PlatformBuilder2<MaterialSwitchData> material;
-  final PlatformBuilder2<CupertinoSwitchData> cupertino;
+  final PlatformBuilder<MaterialSwitchData> material;
+  final PlatformBuilder<CupertinoSwitchData> cupertino;
 
   PlatformSwitch({
     Key key,
@@ -113,18 +119,13 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
     @required this.onChanged,
     this.dragStartBehavior,
     this.activeColor,
-    @Deprecated('Use material argument. material: (context, platform) {}')
-        this.android,
-    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
-        this.ios,
     this.material,
     this.cupertino,
   }) : super(key: key);
 
   @override
   Switch createMaterialWidget(BuildContext context) {
-    final data =
-        android?.call(context) ?? material?.call(context, platform(context));
+    final data = material?.call(context, platform(context));
 
     return Switch(
       key: data?.widgetKey ?? widgetKey,
@@ -147,13 +148,16 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
       onActiveThumbImageError: data?.onActiveThumbImageError,
       onInactiveThumbImageError: data?.onInactiveThumbImageError,
       mouseCursor: data?.mouseCursor,
+      overlayColor: data?.overlayColor,
+      splashRadius: data?.splashRadius,
+      thumbColor: data?.thumbColor,
+      trackColor: data?.trackColor,
     );
   }
 
   @override
   CupertinoSwitch createCupertinoWidget(BuildContext context) {
-    final data =
-        ios?.call(context) ?? cupertino?.call(context, platform(context));
+    final data = cupertino?.call(context, platform(context));
 
     return CupertinoSwitch(
       key: data?.widgetKey ?? widgetKey,

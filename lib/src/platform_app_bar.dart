@@ -6,6 +6,7 @@
 
 import 'package:flutter/cupertino.dart' show CupertinoNavigationBar;
 import 'package:flutter/material.dart' show AppBar, Brightness, TextTheme;
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
@@ -61,6 +62,12 @@ class MaterialAppBarData extends _BaseData {
     this.excludeHeaderSemantics,
     this.shadowColor,
     this.toolbarHeight,
+    this.leadingWidth,
+    this.backwardsCompatibility,
+    this.foregroundColor,
+    this.systemOverlayStyle,
+    this.titleTextStyle,
+    this.toolbarTextStyle,
   }) : super(
           widgetKey: widgetKey,
           title: title,
@@ -87,6 +94,12 @@ class MaterialAppBarData extends _BaseData {
   final bool excludeHeaderSemantics;
   final Color shadowColor;
   final double toolbarHeight;
+  final double leadingWidth;
+  final bool backwardsCompatibility;
+  final Color foregroundColor;
+  final SystemUiOverlayStyle systemOverlayStyle;
+  final TextStyle titleTextStyle;
+  final TextStyle toolbarTextStyle;
 }
 
 class CupertinoNavigationBarData extends _BaseData {
@@ -101,7 +114,6 @@ class CupertinoNavigationBarData extends _BaseData {
       this.padding,
       this.trailing,
       this.border,
-      this.actionsForegroundColor,
       this.transitionBetweenRoutes,
       this.brightness,
       this.heroTag})
@@ -114,7 +126,6 @@ class CupertinoNavigationBarData extends _BaseData {
 
   final Widget trailing;
   final Border border;
-  final Color actionsForegroundColor;
   final bool transitionBetweenRoutes;
   final Object heroTag;
   final bool automaticallyImplyMiddle;
@@ -133,12 +144,8 @@ class PlatformAppBar
   final List<Widget> trailingActions;
   final bool automaticallyImplyLeading;
 
-  final PlatformBuilder<MaterialAppBarData> android;
-
-  final PlatformBuilder<CupertinoNavigationBarData> ios;
-
-  final PlatformBuilder2<MaterialAppBarData> material;
-  final PlatformBuilder2<CupertinoNavigationBarData> cupertino;
+  final PlatformBuilder<MaterialAppBarData> material;
+  final PlatformBuilder<CupertinoNavigationBarData> cupertino;
 
   PlatformAppBar({
     Key key,
@@ -148,18 +155,13 @@ class PlatformAppBar
     this.leading,
     this.trailingActions,
     this.automaticallyImplyLeading,
-    @Deprecated('Use material argument. material: (context, platform) {}')
-        this.android,
-    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
-        this.ios,
     this.material,
     this.cupertino,
   }) : super(key: key);
 
   @override
   PreferredSizeWidget createMaterialWidget(BuildContext context) {
-    final data =
-        android?.call(context) ?? material?.call(context, platform(context));
+    final data = material?.call(context, platform(context));
 
     return AppBar(
       key: data?.widgetKey ?? widgetKey,
@@ -185,13 +187,18 @@ class PlatformAppBar
       excludeHeaderSemantics: data?.excludeHeaderSemantics ?? false,
       shadowColor: data?.shadowColor,
       toolbarHeight: data?.toolbarHeight,
+      leadingWidth: data?.leadingWidth,
+      backwardsCompatibility: data?.backwardsCompatibility,
+      foregroundColor: data?.foregroundColor,
+      systemOverlayStyle: data?.systemOverlayStyle,
+      titleTextStyle: data?.titleTextStyle,
+      toolbarTextStyle: data?.toolbarTextStyle,
     );
   }
 
   @override
   CupertinoNavigationBar createCupertinoWidget(BuildContext context) {
-    final data =
-        ios?.call(context) ?? cupertino?.call(context, platform(context));
+    final data = cupertino?.call(context, platform(context));
 
     var trailing = trailingActions == null || trailingActions.isEmpty
         ? null
@@ -206,7 +213,6 @@ class PlatformAppBar
         key: data?.widgetKey ?? widgetKey,
         middle: data?.title ?? title,
         backgroundColor: data?.backgroundColor ?? backgroundColor,
-        actionsForegroundColor: data?.actionsForegroundColor,
         automaticallyImplyLeading: data?.automaticallyImplyLeading ??
             automaticallyImplyLeading ??
             true,
@@ -226,7 +232,6 @@ class PlatformAppBar
       key: data?.widgetKey ?? widgetKey,
       middle: data?.title ?? title,
       backgroundColor: data?.backgroundColor ?? backgroundColor,
-      actionsForegroundColor: data?.actionsForegroundColor,
       automaticallyImplyLeading:
           data?.automaticallyImplyLeading ?? automaticallyImplyLeading ?? true,
       automaticallyImplyMiddle: data?.automaticallyImplyMiddle ?? true,
@@ -237,6 +242,7 @@ class PlatformAppBar
       trailing: data?.trailing ?? trailing,
       transitionBetweenRoutes: data?.transitionBetweenRoutes ?? true,
       brightness: data?.brightness,
+      //heroTag: , used above
     );
   }
 }

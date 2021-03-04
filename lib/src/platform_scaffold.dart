@@ -15,10 +15,11 @@ import 'package:flutter/cupertino.dart'
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     show
-        Material,
-        Scaffold,
+        DrawerCallback,
         FloatingActionButtonAnimator,
-        FloatingActionButtonLocation;
+        FloatingActionButtonLocation,
+        Material,
+        Scaffold;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/src/platform.dart';
 
@@ -49,10 +50,6 @@ class MaterialScaffoldData extends _BaseData {
     this.floatingActionButtonLocation,
     this.persistentFooterButtons,
     this.primary,
-    @Deprecated(
-        'Use resizeToAvoidBottomInset to specify if the body should resize when the keyboard appears. '
-        'This feature was deprecated after v1.1.9.')
-        this.resizeToAvoidBottomPadding,
     this.bottomSheet,
     this.drawerDragStartBehavior,
     this.extendBody,
@@ -62,6 +59,9 @@ class MaterialScaffoldData extends _BaseData {
     this.extendBodyBehindAppBar,
     this.drawerEnableOpenDragGesture,
     this.endDrawerEnableOpenDragGesture,
+    this.restorationId,
+    this.onDrawerChanged,
+    this.onEndDrawerChanged,
   }) : super(
             widgetKey: widgetKey, backgroundColor: backgroundColor, body: body);
 
@@ -74,7 +74,6 @@ class MaterialScaffoldData extends _BaseData {
   final FloatingActionButtonLocation floatingActionButtonLocation;
   final List<Widget> persistentFooterButtons;
   final bool primary;
-  final bool resizeToAvoidBottomPadding;
   final Widget bottomSheet;
   final DragStartBehavior drawerDragStartBehavior;
   final bool extendBody;
@@ -84,6 +83,9 @@ class MaterialScaffoldData extends _BaseData {
   final bool extendBodyBehindAppBar;
   final bool drawerEnableOpenDragGesture;
   final bool endDrawerEnableOpenDragGesture;
+  final String restorationId;
+  final DrawerCallback onDrawerChanged;
+  final DrawerCallback onEndDrawerChanged;
 }
 
 class CupertinoPageScaffoldData extends _BaseData {
@@ -96,6 +98,7 @@ class CupertinoPageScaffoldData extends _BaseData {
       this.resizeToAvoidBottomInset,
       this.resizeToAvoidBottomInsetTab,
       this.backgroundColorTab,
+      this.restorationIdTab,
       this.controller})
       : super(
           widgetKey: widgetKey,
@@ -109,6 +112,7 @@ class CupertinoPageScaffoldData extends _BaseData {
   final bool resizeToAvoidBottomInsetTab;
   final Color backgroundColorTab;
   final CupertinoTabController controller;
+  final String restorationIdTab;
 }
 
 class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
@@ -120,11 +124,8 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
   final PlatformNavBar bottomNavBar;
   final IndexedWidgetBuilder cupertinoTabChildBuilder;
 
-  final PlatformBuilder<MaterialScaffoldData> android;
-  final PlatformBuilder<CupertinoPageScaffoldData> ios;
-
-  final PlatformBuilder2<MaterialScaffoldData> material;
-  final PlatformBuilder2<CupertinoPageScaffoldData> cupertino;
+  final PlatformBuilder<MaterialScaffoldData> material;
+  final PlatformBuilder<CupertinoPageScaffoldData> cupertino;
 
   final bool iosContentPadding;
   final bool iosContentBottomPadding;
@@ -136,10 +137,6 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
     this.backgroundColor,
     this.appBar,
     this.bottomNavBar,
-    @Deprecated('Use material argument. material: (context, platform) {}')
-        this.android,
-    @Deprecated('Use cupertino argument. cupertino: (context, platform) {}')
-        this.ios,
     this.iosContentPadding = false,
     this.iosContentBottomPadding = false,
     this.material,
@@ -149,8 +146,7 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
 
   @override
   Scaffold createMaterialWidget(BuildContext context) {
-    final data =
-        android?.call(context) ?? material?.call(context, platform(context));
+    final data = material?.call(context, platform(context));
 
     return Scaffold(
       key: data?.widgetKey ?? widgetKey,
@@ -177,14 +173,15 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
       drawerEnableOpenDragGesture: data?.drawerEnableOpenDragGesture ?? true,
       endDrawerEnableOpenDragGesture:
           data?.endDrawerEnableOpenDragGesture ?? true,
-      //resizeToAvoidBottomPadding: deprecated,
+      onDrawerChanged: data?.onDrawerChanged,
+      onEndDrawerChanged: data?.onEndDrawerChanged,
+      restorationId: data?.restorationId,
     );
   }
 
   @override
   Widget createCupertinoWidget(BuildContext context) {
-    final data =
-        ios?.call(context) ?? cupertino?.call(context, platform(context));
+    final data = cupertino?.call(context, platform(context));
 
     var navigationBar =
         appBar?.createCupertinoWidget(context) ?? data?.navigationBar;
@@ -214,6 +211,7 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
             );
           });
         },
+        restorationId: data?.restorationIdTab,
       );
     } else {
       final child = data?.body ?? body;
