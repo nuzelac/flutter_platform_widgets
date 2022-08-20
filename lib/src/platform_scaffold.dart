@@ -205,11 +205,11 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
         controller: data?.controller,
         tabBuilder: (BuildContext context, int index) {
           return CupertinoTabView(builder: (BuildContext context) {
-            Widget child = body ?? data?.body;
+            Widget? child = body ?? data?.body;
 
             return CupertinoPageScaffold(
               backgroundColor: data?.backgroundColor ?? backgroundColor,
-              child: iosContentPad(context, child, navigationBar, tabBar),
+              child: iosContentPad(context, child!, navigationBar, tabBar),
               navigationBar: navigationBar,
               resizeToAvoidBottomInset: data?.resizeToAvoidBottomInset ?? true,
               // key: widgetKey used for CupertinoTabScaffold
