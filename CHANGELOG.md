@@ -1,3 +1,146 @@
+## [2.0.0] - June 08, 2022
+
+#### (Flutter version support: v3.0.0)
+
+- Compatible with Flutter 3.0 and above. 
+- Added new fields to platform widgets. 
+- Removed deprecated `PlatformButton` since the underlying material `FlatButton` and `RaisedButton` are being removed in flutter ^3.1.0
+- Removed required constraint from the `label` field on the `PopupMenuOption` class. (thanks AkshatBaranwal)
+- Removed deprecated `brightness` field from `MaterialAppBarData` as it is deprecated in the framework. Use systemOverlayStyle instead
+- Removed deprecated `textTheme` field from `MaterialAppBarData` as it is deprecated in the framework. Use toolbarTextStyle and titleTextStyle instead
+- Removed deprecated `backwardsCompatibility` field from `MaterialAppBarData` as it is deprecated in the framework. 
+
+## [1.20.0] - February 12, 2022
+
+#### (Flutter version support: v2.10.0)
+
+- Added extra fields from Flutter 2.10.0
+
+## [1.12.1] - December 30, 2021
+
+#### (Flutter version support: v2.5.3)
+
+- Fixed use of context for `PlatformPopupMenu`
+- Added `doneLabel` and `cancelLabel` to `CupertinoDatePickerData`
+
+## [1.12.0] - December 14, 2021
+
+#### (Flutter version support: v2.5.3)
+
+- Added `color` property to `PlatformTextButton` and `PlatformElevatedButton`
+- Added cloud download and upload platform icons. (thanks rledisez)
+
+## [1.11.1] - November 23, 2021
+
+#### (Flutter version support: v2.5.3)
+
+- Added a bit more of an example of how to implement a custom cupertino date picker.
+
+## [1.11.0] - November 19, 2021
+
+#### (Flutter version support: v2.5.3)
+
+- Added `PlatformPopupMenu` to display a material `PopupMenuButton` or cupertino `CupertinoActionSheet`
+- Added `showPlatformDatePicker` to display a material date picker via `showDatePicker` or a custom cupertino date tumbler via `showCupertinoModalPopup`. For cupertino you can replace the default panel to render your own by implementing the widget builder argument `cupertinoContentBuilder`.
+
+## [1.10.0] - October 03, 2021
+
+#### (Flutter version support: v2.5.3)
+
+- Added extra fields from Flutter 2.5
+- Added deprecation for `PlatformButton`. Please use `PlatformElevatedButton` or `PlatformTextButton`
+- Added deprecation on fields that are deprecated in Flutter widgets
+- Removed deprecated platform icons
+
+## [1.9.5] - June 09, 2021
+
+#### (Flutter version support: v2.2)
+
+- Fixes issue where `PlatformTextFormField` could not set expands to true and maxLines to null. 
+- Add new icons (thanks hanskokx)
+
+## [1.9.0] - May 26, 2021
+
+#### (Flutter version support: v2.2)
+
+- `PlatformDialogAction` by default uses `TextButton` rather than `FlatButton`. If you wish to still use `FlatButton` set `legacyMaterialDialogActionButtons` on `PlatformSettingsData` which is set on `PlatformProvider`.  
+
+## [1.8.1] - May 21, 2021
+
+#### (Flutter version support: v2.2)
+
+- Added extra fields from Flutter 2.2
+- Removed deprecated field maxLengthEnforced from PlatformTextField. use maxLengthEnforcement instead
+
+## [1.8.0] - May 20, 2021
+
+#### (Flutter version support: v2.2)
+
+- Add `platformPage` to use as part of Navigator's 2.0 implementation
+- Add `makeCupertinoDecorationNull` to `PlatformtextField` so cupertino's decoration field can be set to null rather than any default style. the default kDefaultRoundedBorderDecoration is now not private
+- Fix issue where `PlatformTabController` was not notifying when index changed.
+
+## [1.7.0, 1.7.1] - May 05, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Moved Material wrapper for cupertino under CupertinoScaffold and CuertinoTabScaffold so Material widgets can render for iOS when using PlatformApp. Need to have `settings: PlatformSettingsData(iosUsesMaterialWidgets: true)` on the `PlatformProvider` to enable. This may now render splash effect for Material widgets which would not occurred before. If this change is not needed then use `settings: PlatformSettingsData(legacyIosUsesMaterialWidgets: true)` 
+- This setting can be disabled on a per PlatformScaffold basis for Cupertino. See noMaterialParent on `PlatformAppBar` cupertino data property
+- Added more PlatformIcons, dehaze, error, help and helpOutline (thanks mlava)
+  
+
+## [1.6.0] - May 01, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Added `platformThemeData` to get access to the platform specific `ThemeData` more easily
+
+## [1.5.0] - April 28, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Added context.platformIcon and additional remove platform icons (thanks vincevargadev)
+
+## [1.4.1] - April 27, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Removed unmapped cupertino icons that show up as a 'question mark'
+  
+## [1.4.0] - April 26, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Added `PlatformTextFormField`
+
+## [1.3.0] - April 23, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Added PlatformElevatedButton and PlatformTextButton which change to Flutter 2.0 Material elevated and text buttons. Cupertino buttons are unchanged, although now by default match Text > Text and Elevated > Filled
+- Updated the Example project
+- Start of documentation (github pages)
+
+## [1.2.0] - April 15, 2021
+
+#### (Flutter version support: v2.0+)
+
+- Added hintText to PlatformTextField to easier set the hint of the field. Thanks slimyjimmy for the suggestion
+- Fixed issue with showPlatformDialog that did not show the `BarrierColor` for the material dialog.
+
+## [1.1.0] - March 22, 2021
+
+#### (Flutter version support: v2.0)
+
+- Full null safety support.
+
+## [0.80.1] - March 18, 2021
+
+#### (Flutter version support: v2.0)
+
+- fix for `showPlatformDialog` barrierDismissible
+- export `PlatformTarget`
+
 ## [0.80.0] - March 04, 2021
 
 #### (Flutter version support: v2.0)
@@ -10,7 +153,7 @@
 #### (Flutter version support: v1.22.0 - v1.22.4)
 
 - Adds `materialBuilder` and `cupertinoBuilder` as alternatives to `material` and `cupertino` on `PlatformTabScaffold` so that the widgets can change properties on tab index change. see example/lib/tabbed/dynamicTabbedPage.dart.
-- Adds new polatform icons, thumb up and down and fix the star icon (thanks DFelten)
+- Adds new platform icons, thumb up and down and fix the star icon (thanks DFelten)
 
 ## [0.71.0] - November 08, 2020
 
@@ -37,7 +180,7 @@
 #### (Flutter version support: v1.20.0 - v1.20.2)
 
 - Added const to icons for treeshaking (thanks sck-v)
-- Added contributers to ReadMe
+- Added contributors to ReadMe
 
 ## [0.60.1] - August 05, 2020
 

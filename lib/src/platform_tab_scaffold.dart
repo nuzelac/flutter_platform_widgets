@@ -22,6 +22,7 @@ import 'package:flutter/material.dart'
         Scaffold;
 import 'package:flutter/widgets.dart';
 
+import 'extensions.dart';
 import 'platform.dart';
 import 'platform_app_bar.dart';
 import 'platform_nav_bar.dart';
@@ -29,18 +30,20 @@ import 'platform_provider.dart';
 import 'widget_base.dart';
 
 abstract class _BaseData {
-  _BaseData({this.widgetKey, this.backgroundColor, this.body});
+  _BaseData({
+    this.widgetKey,
+    this.backgroundColor,
+  });
 
-  final Color backgroundColor;
-  final Widget body;
-  final Key widgetKey;
+  final Color? backgroundColor;
+  final Key? widgetKey;
 }
 
 class MaterialTabScaffoldData extends _BaseData {
   MaterialTabScaffoldData({
-    Color backgroundColor,
+    super.backgroundColor,
+    super.widgetKey,
     this.bodyBuilder,
-    Key widgetKey,
     this.appBarBuilder,
     this.controller,
     this.drawer,
@@ -63,32 +66,32 @@ class MaterialTabScaffoldData extends _BaseData {
     this.restorationId,
     this.onDrawerChanged,
     this.onEndDrawerChanged,
-  }) : super(widgetKey: widgetKey, backgroundColor: backgroundColor);
+  });
 
-  final Widget Function(BuildContext context, int index) bodyBuilder;
-  final MaterialTabController controller;
-  final PreferredSizeWidget Function(BuildContext context, int index)
+  final Widget Function(BuildContext context, int index)? bodyBuilder;
+  final MaterialTabController? controller;
+  final PreferredSizeWidget? Function(BuildContext context, int index)?
       appBarBuilder;
-  final Widget drawer;
-  final Widget endDrawer;
-  final Widget floatingActionButton;
-  final FloatingActionButtonAnimator floatingActionButtonAnimator;
-  final FloatingActionButtonLocation floatingActionButtonLocation;
-  final List<Widget> persistentFooterButtons;
-  final bool primary;
-  final Widget bottomSheet;
-  final DragStartBehavior drawerDragStartBehavior;
-  final bool extendBody;
-  final bool resizeToAvoidBottomInset;
-  final Color drawerScrimColor;
-  final double drawerEdgeDragWidth;
-  final bool extendBodyBehindAppBar;
-  final Color tabsBackgroundColor;
-  final bool drawerEnableOpenDragGesture;
-  final bool endDrawerEnableOpenDragGesture;
-  final String restorationId;
-  final DrawerCallback onDrawerChanged;
-  final DrawerCallback onEndDrawerChanged;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final List<Widget>? persistentFooterButtons;
+  final bool? primary;
+  final Widget? bottomSheet;
+  final DragStartBehavior? drawerDragStartBehavior;
+  final bool? extendBody;
+  final bool? resizeToAvoidBottomInset;
+  final Color? drawerScrimColor;
+  final double? drawerEdgeDragWidth;
+  final bool? extendBodyBehindAppBar;
+  final Color? tabsBackgroundColor;
+  final bool? drawerEnableOpenDragGesture;
+  final bool? endDrawerEnableOpenDragGesture;
+  final String? restorationId;
+  final DrawerCallback? onDrawerChanged;
+  final DrawerCallback? onEndDrawerChanged;
 }
 
 class CupertinoTabViewData {
@@ -101,18 +104,18 @@ class CupertinoTabViewData {
     this.routes,
   });
 
-  final String defaultTitle;
-  final GlobalKey<NavigatorState> navigatorKey;
-  final List<NavigatorObserver> navigatorObservers;
-  final RouteFactory onGenerateRoute;
-  final RouteFactory onUnknownRoute;
-  final Map<String, WidgetBuilder> routes;
+  final String? defaultTitle;
+  final GlobalKey<NavigatorState>? navigatorKey;
+  final List<NavigatorObserver>? navigatorObservers;
+  final RouteFactory? onGenerateRoute;
+  final RouteFactory? onUnknownRoute;
+  final Map<String, WidgetBuilder>? routes;
 }
 
 class CupertinoTabScaffoldData extends _BaseData {
   CupertinoTabScaffoldData({
-    Color backgroundColor,
-    Key widgetKey,
+    super.backgroundColor,
+    super.widgetKey,
     this.items,
     this.bodyBuilder,
     this.appBarBuilder,
@@ -124,61 +127,57 @@ class CupertinoTabScaffoldData extends _BaseData {
     this.controller,
     this.restorationId,
     this.restorationScopeIdTabView,
-  }) : super(
-          widgetKey: widgetKey,
-          backgroundColor: backgroundColor,
-        );
+  });
 
-  final List<BottomNavigationBarItem> items;
+  final List<BottomNavigationBarItem>? items;
 
-  final CupertinoTabViewData Function(BuildContext context, int index)
+  final CupertinoTabViewData Function(BuildContext context, int index)?
       tabViewDataBuilder;
 
-  final Widget Function(BuildContext context, int index) bodyBuilder;
-  final ObstructingPreferredSizeWidget Function(BuildContext context, int index)
-      appBarBuilder;
-  final bool resizeToAvoidBottomInset;
-  final bool resizeToAvoidBottomInsetTab;
-  final Color tabsBackgroundColor;
-  final CupertinoTabController controller;
-  final bool useCupertinoTabView;
-
-  final String restorationId;
-  final String restorationScopeIdTabView;
+  final Widget Function(BuildContext context, int index)? bodyBuilder;
+  final ObstructingPreferredSizeWidget? Function(
+      BuildContext context, int index)? appBarBuilder;
+  final bool? resizeToAvoidBottomInset;
+  final bool? resizeToAvoidBottomInsetTab;
+  final Color? tabsBackgroundColor;
+  final CupertinoTabController? controller;
+  final bool? useCupertinoTabView;
+  final String? restorationId;
+  final String? restorationScopeIdTabView;
 }
 
 class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
-  final Key widgetKey;
+  final Key? widgetKey;
 
-  final Widget Function(BuildContext context, int index) bodyBuilder;
-  final Color pageBackgroundColor;
-  final Color tabsBackgroundColor;
-  final int currentIndex;
-  final void Function(int index) itemChanged;
+  final Widget Function(BuildContext context, int index)? bodyBuilder;
+  final Color? pageBackgroundColor;
+  final Color? tabsBackgroundColor;
+  final void Function(int index)? itemChanged;
 
-  final PlatformBuilder<MaterialTabScaffoldData> material;
-  final PlatformIndexBuilder<MaterialTabScaffoldData> materialBuilder;
+  final PlatformBuilder<MaterialTabScaffoldData>? material;
+  final PlatformIndexBuilder<MaterialTabScaffoldData>? materialBuilder;
 
-  final PlatformBuilder<MaterialNavBarData> materialTabs;
+  final PlatformBuilder<MaterialNavBarData>? materialTabs;
 
-  final PlatformBuilder<CupertinoTabScaffoldData> cupertino;
-  final PlatformIndexBuilder<CupertinoTabScaffoldData> cupertinoBuilder;
+  final PlatformBuilder<CupertinoTabScaffoldData>? cupertino;
+  final PlatformIndexBuilder<CupertinoTabScaffoldData>? cupertinoBuilder;
 
-  final PlatformBuilder<CupertinoTabBarData> cupertinoTabs;
+  final PlatformBuilder<CupertinoTabBarData>? cupertinoTabs;
 
   final bool iosContentPadding;
   final bool iosContentBottomPadding;
 
-  final PlatformTabController tabController;
+  final PlatformTabController? tabController;
 
-  final List<BottomNavigationBarItem> items;
+  final List<BottomNavigationBarItem>? items;
 
-  final PlatformAppBar Function(BuildContext context, int index) appBarBuilder;
+  final PlatformAppBar? Function(BuildContext context, int index)?
+      appBarBuilder;
 
-  final String restorationId;
+  final String? restorationId;
 
   PlatformTabScaffold({
-    Key key,
+    super.key,
     this.widgetKey,
     this.items,
     this.bodyBuilder,
@@ -186,7 +185,6 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
     this.tabsBackgroundColor,
     this.appBarBuilder,
     this.tabController,
-    this.currentIndex,
     this.itemChanged,
     this.iosContentPadding = false,
     this.iosContentBottomPadding = false,
@@ -198,20 +196,19 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
     this.cupertinoBuilder,
     this.cupertinoTabs,
   })  : assert(
-          material == null || (material != null && materialBuilder == null),
+          (material != null && materialBuilder == null) || material == null,
         ),
         assert(
-          materialBuilder == null ||
-              (material == null && materialBuilder != null),
+          (material == null && materialBuilder != null) ||
+              materialBuilder == null,
         ),
         assert(
-          cupertino == null || (cupertino != null && cupertinoBuilder == null),
+          (cupertino != null && cupertinoBuilder == null) || cupertino == null,
         ),
         assert(
-          cupertinoBuilder == null ||
-              (cupertino == null && cupertinoBuilder != null),
-        ),
-        super(key: key);
+          (cupertino == null && cupertinoBuilder != null) ||
+              cupertinoBuilder == null,
+        );
 
   @override
   Widget createMaterialWidget(BuildContext context) {
@@ -224,7 +221,7 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
     PlatformTabScaffold(tabController: controller) ''');
 
     return AnimatedBuilder(
-      animation: controller,
+      animation: controller!,
       builder: (context, _) => _buildAndroid(
         context,
         materialBuilder?.call(context, platform(context), controller.index) ??
@@ -236,28 +233,28 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
 
   Widget _buildAndroid(
     BuildContext context,
-    MaterialTabScaffoldData data,
+    MaterialTabScaffoldData? data,
     MaterialTabController controller,
   ) {
-    final index = controller?.index ?? currentIndex;
-
     final platformNavBar = PlatformNavBar(
       items: items,
       backgroundColor: data?.tabsBackgroundColor ?? tabsBackgroundColor,
-      currentIndex: index,
+      currentIndex: controller.index,
       material: materialTabs,
       itemChanged: (int index) {
-        controller?.index = index;
+        controller.index = index;
         itemChanged?.call(index);
       },
     );
     final tabBar = platformNavBar.createMaterialWidget(context);
 
-    final child = data?.bodyBuilder?.call(context, index) ??
-        bodyBuilder?.call(context, index);
+    final child = data?.bodyBuilder?.call(context, controller.index) ??
+        bodyBuilder?.call(context, controller.index);
 
-    final appBar = data?.appBarBuilder?.call(context, index) ??
-        appBarBuilder?.call(context, index)?.createMaterialWidget(context);
+    final appBar = data?.appBarBuilder?.call(context, controller.index) ??
+        appBarBuilder
+            ?.call(context, controller.index)
+            ?.createMaterialWidget(context);
 
     return Scaffold(
       key: data?.widgetKey ?? widgetKey,
@@ -303,11 +300,11 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
       return _buildCupertino(
         context,
         data,
-        controller,
+        controller!,
       );
     } else {
       return AnimatedBuilder(
-        animation: controller,
+        animation: controller!,
         builder: (context, _) => _buildCupertino(
           context,
           cupertinoBuilder?.call(context, platform(context), controller.index),
@@ -319,13 +316,13 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
 
   Widget _buildCupertino(
     BuildContext context,
-    CupertinoTabScaffoldData data,
+    CupertinoTabScaffoldData? data,
     CupertinoTabController controller,
   ) {
     final navBar = PlatformNavBar(
       items: items,
       backgroundColor: tabsBackgroundColor,
-      currentIndex: currentIndex,
+      currentIndex: controller.index,
       itemChanged: itemChanged,
       cupertino: cupertinoTabs,
       // key: Not used ignore
@@ -334,6 +331,11 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
     );
     final tabBar = navBar.createCupertinoWidget(context);
 
+    final providerState = PlatformProvider.of(context);
+    final useLegacyMaterial =
+        providerState?.settings.legacyIosUsesMaterialWidgets ?? false;
+    final useMaterial = providerState?.settings.iosUsesMaterialWidgets ?? false;
+
     final result = CupertinoTabScaffold(
       key: widgetKey,
       tabBar: tabBar,
@@ -341,75 +343,87 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
       backgroundColor: data?.tabsBackgroundColor,
       resizeToAvoidBottomInset: data?.resizeToAvoidBottomInset ?? true,
       tabBuilder: (context, index) {
-        if (data == null || data.useCupertinoTabView) {
+        if (data?.useCupertinoTabView ?? false) {
           return CupertinoTabView(
             // key Not used
             defaultTitle:
-                data?.tabViewDataBuilder?.call(context, index)?.defaultTitle,
+                data?.tabViewDataBuilder?.call(context, index).defaultTitle,
             navigatorKey:
-                data?.tabViewDataBuilder?.call(context, index)?.navigatorKey,
+                data?.tabViewDataBuilder?.call(context, index).navigatorKey,
             navigatorObservers: data?.tabViewDataBuilder
                     ?.call(context, index)
-                    ?.navigatorObservers ??
+                    .navigatorObservers ??
                 const <NavigatorObserver>[],
             onGenerateRoute:
-                data?.tabViewDataBuilder?.call(context, index)?.onGenerateRoute,
+                data?.tabViewDataBuilder?.call(context, index).onGenerateRoute,
             onUnknownRoute:
-                data?.tabViewDataBuilder?.call(context, index)?.onUnknownRoute,
-            routes: data?.tabViewDataBuilder?.call(context, index)?.routes,
+                data?.tabViewDataBuilder?.call(context, index).onUnknownRoute,
+            routes: data?.tabViewDataBuilder?.call(context, index).routes,
             builder: (context) {
-              return _buildCupertinoPageScaffold(context, index, data, tabBar);
+              return _buildCupertinoPageScaffold(
+                context,
+                index,
+                data,
+                tabBar,
+                useMaterial,
+              );
             },
             restorationScopeId: data?.restorationScopeIdTabView,
           );
         }
 
-        return _buildCupertinoPageScaffold(context, index, data, tabBar);
+        return _buildCupertinoPageScaffold(
+          context,
+          index,
+          data,
+          tabBar,
+          useMaterial,
+        );
       },
       restorationId: data?.restorationId ?? restorationId,
     );
 
-    final providerState = PlatformProvider.of(context);
-    final useMaterial =
-        providerState?.settings?.iosUsesMaterialWidgets ?? false;
-
-    if (useMaterial) {
-      // Ensure that there is Material widget at the root page level
-      // as there can be Material widgets used on ios
-      final materialWidget = context.findAncestorWidgetOfExactType<Material>();
-      if (materialWidget == null) {
-        return Material(
-          elevation: 0.0,
-          child: result,
-        );
-      }
-    }
-
-    return result;
+    // Ensure that there is Material widget at the root page level
+    // as there can be Material widgets used on ios
+    return result.withMaterial(useLegacyMaterial &&
+        context.findAncestorWidgetOfExactType<Material>() == null);
   }
 
   CupertinoPageScaffold _buildCupertinoPageScaffold(
     BuildContext context,
     int index,
-    CupertinoTabScaffoldData data,
+    CupertinoTabScaffoldData? data,
     CupertinoTabBar tabBar,
+    bool useMaterial,
   ) {
     final appBar = data?.appBarBuilder?.call(context, index) ??
         appBarBuilder?.call(context, index)?.createCupertinoWidget(context);
 
     final child = data?.bodyBuilder?.call(context, index) ??
         bodyBuilder?.call(context, index);
+
+    assert(child != null);
+
     return CupertinoPageScaffold(
       //key Not used
       navigationBar: appBar,
-      child: iosContentPad(context, child, appBar, tabBar),
+      child: iosContentPad(
+        context,
+        child!.withMaterial(useMaterial),
+        appBar,
+        tabBar,
+      ),
       backgroundColor: data?.backgroundColor ?? pageBackgroundColor,
       resizeToAvoidBottomInset: data?.resizeToAvoidBottomInset ?? true,
     );
   }
 
-  Widget iosContentPad(BuildContext context, Widget child,
-      ObstructingPreferredSizeWidget navigationBar, CupertinoTabBar tabBar) {
+  Widget iosContentPad(
+    BuildContext context,
+    Widget child,
+    ObstructingPreferredSizeWidget? navigationBar,
+    CupertinoTabBar tabBar,
+  ) {
     final MediaQueryData existingMediaQuery = MediaQuery.of(context);
 
     if (!iosContentPadding && !iosContentBottomPadding) {
@@ -428,7 +442,7 @@ class PlatformTabScaffold extends PlatformWidgetBase<Widget, Widget> {
       top = obstruct ? 0.0 : topPadding;
     }
 
-    if (iosContentBottomPadding && tabBar != null) {
+    if (iosContentBottomPadding) {
       bottom = existingMediaQuery.padding.bottom;
     }
 
@@ -444,7 +458,7 @@ class MaterialTabControllerData {
     this.initialIndex,
   });
 
-  final int initialIndex;
+  final int? initialIndex;
 }
 
 class CupertinoTabControllerData {
@@ -452,19 +466,17 @@ class CupertinoTabControllerData {
     this.initialIndex,
   });
 
-  final int initialIndex;
+  final int? initialIndex;
 }
 
 class MaterialTabController extends ChangeNotifier {
   MaterialTabController({int initialIndex = 0})
       : _index = initialIndex,
-        assert(initialIndex != null),
         assert(initialIndex >= 0);
 
   int get index => _index;
   int _index;
   set index(int value) {
-    assert(value != null);
     assert(value >= 0);
     if (_index == value) {
       return;
@@ -476,11 +488,11 @@ class MaterialTabController extends ChangeNotifier {
 
 // In the same file so that the private android or ios controllers can be accessed
 class PlatformTabController extends ChangeNotifier {
-  MaterialTabController _materialController;
-  CupertinoTabController _cupertinoController;
+  MaterialTabController? _materialController;
+  CupertinoTabController? _cupertinoController;
 
-  final MaterialTabControllerData android;
-  final CupertinoTabControllerData ios;
+  final MaterialTabControllerData? android;
+  final CupertinoTabControllerData? ios;
 
   final int _initialIndex;
 
@@ -489,15 +501,14 @@ class PlatformTabController extends ChangeNotifier {
     this.android,
     this.ios,
   })  : _initialIndex = initialIndex,
-        assert(initialIndex != null),
         assert(initialIndex >= 0);
 
-  CupertinoTabController _cupertino(BuildContext context) {
+  CupertinoTabController? _cupertino(BuildContext context) {
     _init(context);
     return _cupertinoController;
   }
 
-  MaterialTabController _material(BuildContext context) {
+  MaterialTabController? _material(BuildContext context) {
     _init(context);
     return _materialController;
   }
@@ -505,20 +516,16 @@ class PlatformTabController extends ChangeNotifier {
   int index(BuildContext context) {
     _init(context);
 
-    return _materialController?.index ?? _cupertinoController.index;
+    return _materialController?.index ?? _cupertinoController?.index ?? 0;
   }
 
   void setIndex(BuildContext context, int index) {
-    assert(context != null);
     assert(index >= 0);
 
     _init(context);
 
-    if (_materialController != null) {
-      _materialController.index = index;
-    } else if (_cupertinoController != null) {
-      _cupertinoController.index = index;
-    }
+    _materialController?.index = index;
+    _cupertinoController?.index = index;
   }
 
   void _init(BuildContext context) {
@@ -526,31 +533,31 @@ class PlatformTabController extends ChangeNotifier {
       if (_materialController == null) {
         int useIndex = android?.initialIndex ?? _initialIndex;
         if (_cupertinoController != null) {
-          useIndex = _cupertinoController.index;
+          useIndex = _cupertinoController?.index ?? 0;
 
-          _cupertinoController.removeListener(_listener);
-          _cupertinoController.dispose();
+          _cupertinoController?.removeListener(_listener);
+          _cupertinoController?.dispose();
           _cupertinoController = null;
         }
         _materialController = MaterialTabController(
           initialIndex: useIndex,
-        );
+        )..addListener(_listener);
       }
     }
     if (isCupertino(context)) {
       if (_cupertinoController == null) {
         int useIndex = ios?.initialIndex ?? _initialIndex;
         if (_materialController != null) {
-          useIndex = _materialController.index;
+          useIndex = _materialController?.index ?? 0;
 
-          _materialController.removeListener(_listener);
-          _materialController.dispose();
+          _materialController?.removeListener(_listener);
+          _materialController?.dispose();
           _materialController = null;
         }
 
         _cupertinoController = CupertinoTabController(
           initialIndex: useIndex,
-        );
+        )..addListener(_listener);
       }
     }
   }

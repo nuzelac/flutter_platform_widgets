@@ -7,10 +7,15 @@
 import 'dart:ui';
 
 import 'package:flutter/cupertino.dart'
-    show CupertinoDynamicColor, showCupertinoDialog, showCupertinoModalPopup;
+    show
+        CupertinoDynamicColor,
+        CupertinoTheme,
+        CupertinoThemeData,
+        showCupertinoDialog,
+        showCupertinoModalPopup;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'
-    show Theme, showDialog, showModalBottomSheet;
+    show Theme, ThemeData, Colors, showDialog, showModalBottomSheet;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
@@ -45,7 +50,7 @@ enum PlatformTarget {
 PlatformStyle _platformStyle(BuildContext context) {
   final platform = PlatformProvider.of(context)?.platform;
 
-  final platformStyle = PlatformProvider.of(context)?.settings?.platformStyle;
+  final platformStyle = PlatformProvider.of(context)?.settings.platformStyle;
 
   if (platform == null && kIsWeb) {
     return platformStyle?.web ?? PlatformStyle.Material;
@@ -65,8 +70,6 @@ PlatformStyle _platformStyle(BuildContext context) {
     case TargetPlatform.windows:
       return platformStyle?.windows ?? PlatformStyle.Material;
   }
-
-  return PlatformStyle.Material;
 }
 
 bool isMaterial(BuildContext context) {
@@ -75,6 +78,16 @@ bool isMaterial(BuildContext context) {
 
 bool isCupertino(BuildContext context) {
   return _platformStyle(context) == PlatformStyle.Cupertino;
+}
+
+T platformThemeData<T>(
+  BuildContext context, {
+  required T Function(ThemeData theme) material,
+  required T Function(CupertinoThemeData theme) cupertino,
+}) {
+  return isMaterial(context)
+      ? material(Theme.of(context))
+      : cupertino(CupertinoTheme.of(context));
 }
 
 PlatformTarget platform(BuildContext context) {
@@ -96,25 +109,23 @@ PlatformTarget platform(BuildContext context) {
     case TargetPlatform.windows:
       return PlatformTarget.windows;
   }
-
-  return null;
 }
 
-Future<T> showPlatformDialog<T>({
-  @required BuildContext context,
-  @required WidgetBuilder builder,
-  bool barrierDismissible,
-  RouteSettings routeSettings,
+Future<T?> showPlatformDialog<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  bool? barrierDismissible,
+  RouteSettings? routeSettings,
   bool useRootNavigator = true,
   bool materialUseSafeArea = true,
-  Color materialBarrierColor,
-  String barrierLabel,
+  Color? materialBarrierColor = Colors.black54,
+  String? barrierLabel,
 }) {
   if (isMaterial(context)) {
     return showDialog<T>(
       context: context,
       builder: builder,
-      barrierDismissible: barrierDismissible,
+      barrierDismissible: barrierDismissible ?? true,
       routeSettings: routeSettings,
       useRootNavigator: useRootNavigator,
       useSafeArea: materialUseSafeArea,
@@ -134,20 +145,30 @@ Future<T> showPlatformDialog<T>({
   }
 }
 
-class MaterialModalSheetData {
-  final Color backgroundColor;
-  final double elevation;
-  final ShapeBorder shape;
+abstract class _BaseData {
+  _BaseData({
+    this.anchorPoint,
+  });
+
+  final Offset? anchorPoint;
+}
+
+class MaterialModalSheetData extends _BaseData {
+  final Color? backgroundColor;
+  final double? elevation;
+  final ShapeBorder? shape;
   final bool isScrollControlled;
   final bool useRootNavigator;
-  final Clip clipBehavior;
-  final Color barrierColor;
+  final Clip? clipBehavior;
+  final Color? barrierColor;
   final bool enableDrag;
   final bool isDismissible;
-  final RouteSettings routeSettings;
-  AnimationController transitionAnimationController;
+  final RouteSettings? routeSettings;
+  final AnimationController? transitionAnimationController;
+  final BoxConstraints? constraints;
 
   MaterialModalSheetData({
+    super.anchorPoint,
     this.backgroundColor,
     this.elevation,
     this.shape,
@@ -159,37 +180,36 @@ class MaterialModalSheetData {
     this.isDismissible = false,
     this.routeSettings,
     this.transitionAnimationController,
-  })  : assert(isScrollControlled != null),
-        assert(useRootNavigator != null),
-        assert(enableDrag != null),
-        assert(isDismissible != null);
+    this.constraints,
+  });
 }
 
-class CupertinoModalSheetData {
-  final ImageFilter imageFilter;
-  final bool semanticsDismissible;
+class CupertinoModalSheetData extends _BaseData {
+  final ImageFilter? imageFilter;
+  final bool? semanticsDismissible;
   final bool useRootNavigator;
   final Color barrierColor;
   final bool barrierDismissible;
-  final RouteSettings routeSettings;
+  final RouteSettings? routeSettings;
 
   CupertinoModalSheetData({
+    super.anchorPoint,
     this.imageFilter,
     this.semanticsDismissible,
     this.useRootNavigator = true,
     this.barrierColor = _kModalBarrierColor,
     this.barrierDismissible = true,
     this.routeSettings,
-  }) : assert(useRootNavigator != null);
+  });
 }
 
 /// Displays either the showModalBottomSheet for material
 /// or showCupertinoModalPopup for cupertino
-Future<T> showPlatformModalSheet<T>({
-  @required BuildContext context,
-  @required WidgetBuilder builder,
-  MaterialModalSheetData material,
-  CupertinoModalSheetData cupertino,
+Future<T?> showPlatformModalSheet<T>({
+  required BuildContext context,
+  required WidgetBuilder builder,
+  MaterialModalSheetData? material,
+  CupertinoModalSheetData? cupertino,
 }) {
   if (isMaterial(context)) {
     return showModalBottomSheet<T>(
@@ -206,17 +226,19 @@ Future<T> showPlatformModalSheet<T>({
       isDismissible: material?.isDismissible ?? true,
       routeSettings: material?.routeSettings,
       transitionAnimationController: material?.transitionAnimationController,
+      constraints: material?.constraints,
+      anchorPoint: material?.anchorPoint,
     );
   } else {
     return showCupertinoModalPopup<T>(
-      context: context,
-      builder: builder,
-      filter: cupertino?.imageFilter,
-      semanticsDismissible: cupertino?.semanticsDismissible,
-      useRootNavigator: cupertino?.useRootNavigator ?? true,
-      barrierColor: cupertino?.barrierColor,
-      barrierDismissible: cupertino?.barrierDismissible ?? true,
-      routeSettings: cupertino?.routeSettings,
-    );
+        context: context,
+        builder: builder,
+        filter: cupertino?.imageFilter,
+        semanticsDismissible: cupertino?.semanticsDismissible,
+        useRootNavigator: cupertino?.useRootNavigator ?? true,
+        barrierColor: cupertino?.barrierColor ?? _kModalBarrierColor,
+        barrierDismissible: cupertino?.barrierDismissible ?? true,
+        routeSettings: cupertino?.routeSettings,
+        anchorPoint: cupertino?.anchorPoint);
   }
 }

@@ -1,8 +1,13 @@
+<p align="center">
+<img src="https://raw.githubusercontent.com/stryder-dev/flutter_platform_widgets/master/images/logo.png" width="250px" alt="Flutter Platform Widgets" />
+</p>
+
+
 # Flutter Platform Widgets
 
 ![Pub](https://img.shields.io/pub/v/flutter_platform_widgets) ![GitHub](https://img.shields.io/github/license/stryder-dev/flutter_platform_widgets)
 
-This project is an attempt to see if it is possible to create widgets that are platform aware. Currently in order to render targeted Material or Cupertino device specific styles, you need to either conditionaly check the platform or create a set of widgets to render differently depending on the running platform.
+This project is an attempt to see if it is possible to create widgets that are platform aware. Currently in order to render targeted Material or Cupertino device specific styles, you need to either conditionally check the platform or create a set of widgets to render differently depending on the running platform.
 
 This package supports the **Stable** release as a full released version.
 
@@ -36,20 +41,23 @@ Each `PlatformWidget` provides common properties directly as constructor argumen
 - [PlatformText](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformtext)
 - [PlatformSwitch](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformswitch)
 - [PlatformSlider](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformslider)
-- [PlatformTextField](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformtextfield)
-- [PlatformButton](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformbutton)
+- [PlatformTextField](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformtextfield
 - [PlatformIconButton](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformiconbutton)
 - [PlatformApp](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformapp)
 - [PlatformScaffold](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformscaffold)
 - [PlatformTabScaffold](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformtabscaffold)
 - [PlatformAppBar](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformappbar)
 - [PlatformNavBar](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformnavbar)
+- [PlatformPopupMenu](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformpopupmenu)
 - [PlatformAlertDialog](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformalertdialog)
 - [PlatformDialogAction](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformdialogaction)
 - [PlatformCircularProgressIndicator](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformcircularprogressindicator)
 - [PlatformPageRoute](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformpageroute)
+- [PlatformPage](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformpage)
 - [ShowPlatformModalSheet](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#showplatformmodalsheet)
+- [ShowPlatformDatePicker](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#showplatformdatepicker)
 - [PlatformProvider](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformprovider)
+- [PlatformThemeData](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformthemedata)
 - [PlatformIcons](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformicons)
 - [PlatformWidgetBuilder](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/README.md#platformwidgetbuilder)
 
@@ -133,43 +141,6 @@ return PlatformTextField(
 );
 ```
 
-## PlatformButton
-
-A button that will render a `RaisedButton` or `FlatButton` for material or a `CupertinoButton` for cupertino.
-
-```dart
-return PlatformButton(
-  onPressed: () => print('send'),
-  child: PlatformText('Send'),
-);
-```
-
-#### Enhance
-
-Extend with `WidgetBuilder` for material or cupertino.
-
-```dart
-return PlatformButton(
-  onPressed: () => print('send'),
-  child: PlatformText('Send'),
-  material: (_, __)  => MaterialRaisedButtonData(...),
-  cupertino: (_, __) => CupertinoButtonData(...)
-);
-```
-
-> Note: For material you can use the `FlatButton` instead. To do this use the `MaterialFlatButtonData` on the `materialFlat` argument.
-
-> Note: For cupertino you can use the `CupertinoButton.filled` instead. To do this use the `CupertinoFilledButtonData` on the `cupertinoFilled` argument.
-
-```dart
-return PlatformButton(
- onPressed: () => print('send'),
- child: PlatformText('Send'),
- materialFlat: (_, __)    => MaterialFlatButtonData(),
- cupertinoFilled: (_, __) => CupertinoFilledButtonData(),
-);
-```
-
 ## PlatformIconButton
 
 A clickable (tappable) button with an icon. Uses `IconButton` for material or `CupertinoButton` for cupertino.
@@ -187,7 +158,7 @@ return PlatformIconButton(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 Widget infoIconButton() {
@@ -203,7 +174,7 @@ Widget infoIconButton() {
 
 ## PlatformApp
 
-A top level widget for the applciation that uses `MaterialApp` for material or `CupertinoApp` for cupertino.
+A top level widget for the application that uses `MaterialApp` for material or `CupertinoApp` for cupertino.
 
 ```dart
 return PlatformApp(
@@ -223,7 +194,7 @@ return PlatformApp.router(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformApp(
@@ -256,11 +227,11 @@ return PlatformScaffold(
 );
 ```
 
-> Note that the use of `iosContentPadding = true` is only required if the content is being obstruced behind the appBar. `iosContentBottomPadding` is used if the content needs to be above the navBar and not go behind it. This will not have the translucent effect for iOS when these are set to `true`. If that is desirable, then the scrolling and content alignment need to be managed yourself.
+> Note that the use of `iosContentPadding = true` is only required if the content is being obstructed behind the appBar. `iosContentBottomPadding` is used if the content needs to be above the navBar and not go behind it. This will not have the translucent effect for iOS when these are set to `true`. If that is desirable, then the scrolling and content alignment need to be managed yourself.
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformScaffold(
@@ -291,15 +262,15 @@ return PlatformTabScaffold(
 
 More more detailed example look at:
 
-- [Basic Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tabbed/basicTabbedPage.dart)
-- [Sliver Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tabbed/sliverTabbedPage.dart)
-- [Dynamic Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tabbed/dynamicTabbedPage.dart)
+- [Basic Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tab_pages/basicTabbedPage.dart)
+- [Sliver Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tab_pages/sliverTabbedPage.dart)
+- [Dynamic Example](https://github.com/stryder-dev/flutter_platform_widgets/blob/master/example/lib/tab_pages/dynamicTabbedPage.dart)
 
-> Note that the use of `iosContentPadding = true` is only required if the content is being obstruced behind the appBar. `iosContentBottomPadding` is used if the content needs to be above the navBar and not go behind it. This will not have the translucent effect for iOS when these are set to `true`. If that is desirable, then the scrolling and content alignment need to be managed yourself.
+> Note that the use of `iosContentPadding = true` is only required if the content is being obstructed behind the appBar. `iosContentBottomPadding` is used if the content needs to be above the navBar and not go behind it. This will not have the translucent effect for iOS when these are set to `true`. If that is desirable, then the scrolling and content alignment need to be managed yourself.
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformTabScaffold(
@@ -320,7 +291,7 @@ return PlatformTabScaffold(
 
 ## PlatformAppBar
 
-The AppBar is the top Header bar with a title, leftside or rightside buttons. Uses `AppBar` for material or `CupertinoNavigationBar` for cupertino.
+The AppBar is the top Header bar with a title, left-side or right-side buttons. Uses `AppBar` for material or `CupertinoNavigationBar` for cupertino.
 
 ```dart
 return PlatformAppBar(
@@ -349,7 +320,7 @@ return PlatformAppBar(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformAppBar(
@@ -384,7 +355,7 @@ return PlatformNavBar(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformNavBar(
@@ -402,6 +373,49 @@ return PlatformNavBar(
   cupertino: (_, __) => CupertinoTabBarData(...),
 );
 ```
+
+## PlatformPopupMenu
+
+The PlatformPopupMenu will render a using a `PopupMenuButton` for material or use a `CupertinoActionSheet` for cupertino which will display a list of actions.
+
+```dart
+return PlatformPopupMenu(
+  options: [
+    PopupMenuOption(label: 'One', onTap: _navToPageOne),
+    PopupMenuOption(label: 'Two', onTap: _navToPageTwo),
+    PopupMenuOption(label: 'Three', onTap: _navToPageThree)
+  ],
+  icon: Icon(
+    context.platformIcon(
+      material: Icons.more_vert_rounded,
+      cupertino: CupertinoIcons.ellipsis,
+    ),
+  ),
+);
+```
+
+#### Enhance
+
+Extend with `PlatformBuilder` for material or cupertino.
+
+```dart
+return PlatformPopupMenu(
+  options: [
+    PopupMenuOption(label: 'One', onTap: _navToPageOne),
+    PopupMenuOption(label: 'Two', onTap: _navToPageTwo),
+    PopupMenuOption(label: 'Three', onTap: _navToPageThree)
+  ],
+  icon: Icon(
+    context.platformIcon(
+      material: Icons.more_vert_rounded,
+      cupertino: CupertinoIcons.ellipsis,
+    ),
+  ),
+  material: (_, __)  => MaterialPopupMenuData(...),
+  cupertino: (_, __) => CupertinoPopupMenuData(...),
+);
+```
+
 
 ## PlatformAlertDialog
 
@@ -429,7 +443,7 @@ showPlatformDialog(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 showDialog(
@@ -442,7 +456,7 @@ showDialog(
 
 ## PlatformDialogAction
 
-The DialogAction widget is used to describe the set of buttons on the AlertDialog. Uses `FlatButton` for material or `CupertinoDialogAction` for cupertino.
+The DialogAction widget is used to describe the set of buttons on the AlertDialog. Uses `TextButton` for material or `CupertinoDialogAction` for cupertino. 
 
 ```dart
 PlatformDialogAction(
@@ -453,7 +467,7 @@ PlatformDialogAction(
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 PlatformDialogAction(
@@ -474,7 +488,7 @@ return PlatformCircularProgressIndicator();
 
 #### Enhance
 
-Extend with `WidgetBuilder` for material or cupertino.
+Extend with `PlatformBuilder` for material or cupertino.
 
 ```dart
 return PlatformCircularProgressIndicator(
@@ -491,9 +505,46 @@ This function can be used within the `Navigator` to push either the `MaterialPag
   Navigator.push(
     context,
     platformPageRoute(
+      context: context,
       builder: pageToDisplayBuilder,
     ),
   );
+```
+
+#### Enhance
+
+Extend with `PlatformBuilder` for material or cupertino.
+
+```dart
+return platformPageRoute(
+  context: context,
+  material: (_, __)  => MaterialPageRouteData(...),
+  cupertino: (_, __) => CupertinoPageRouteData(...),
+);
+```
+
+## PlatformPage
+
+This function can be used within flutter's `Navigator 2` to push either the `MaterialPage` for material or `CupertinoPage` for cupertino.
+
+```dart
+    platformPage(
+      context: context,
+      child: child,
+    ),
+  );
+```
+
+#### Enhance
+
+Extend with `PlatformBuilder` for material or cupertino.
+
+```dart
+return platformPage(
+  context: context,
+  material: (_, __)  => MaterialPageData(...),
+  cupertino: (_, __) => CupertinoPageData(...),
+);
 ```
 
 ## ShowPlatformModalSheet
@@ -510,7 +561,37 @@ This function is used to either display a `ModalBottomSheet` for material or `Cu
     );
 ```
 
-> Note: Since Material and Cupertino content may be quite different it may be useful tl use `PlatformWidget`.
+> Note: Since Material and Cupertino content may be quite different it may be useful to use `PlatformWidget`.
+
+## ShowPlatformDatePicker
+
+This function is used to either display a `DatePickerDialog` for material or `CupertinoDatePicker` via a `showCupertinoModalPopup` for cupertino.
+
+```dart
+  showPlatformDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now().subtract(const Duration(days: 1000)),
+      lastDate: DateTime.now().add(const Duration(days: 1000)),
+    );
+```
+
+> Note: The Cupertino popup uses a modal bottom sheet. If you need to customize
+> the look then set the `cupertinoContentBuilder` property and return a custom content.
+> If you create your own content builder you will need to manage the state of the date yourself.
+> See the implementation of using `StatefulBuilder` or `StatefulWidget` to manage state updates within the example project.
+
+```dart
+final date = await showPlatformDatePicker(
+    context: context,
+    firstDate: DateTime.now().subtract(const Duration(days: 100)),
+    lastDate: DateTime.now().add(const Duration(days: 100)),
+    initialDate: DateTime.now(),
+    cupertinoContentBuilder: (contentData, data) =>
+        _CustomCupertinoDatePicker(contentData: contentData),
+  );
+```
+
 
 ## PlatformProvider
 
@@ -571,9 +652,33 @@ PlatformProvider(
 )
 ```
 
+_legacyIosUsesMaterialWidgets_
+
+- If true will have the `Material` widget above `CupertinoScaffold` and `CupertinoTabScaffold` rather than one level down. Having set to `false` will likely prevent an exception when using a material widget for a cupertino style. This setting was the default pre v1.6.0
+
+_legacyMaterialDialogActionButtons_
+
+- If true all material dialog action buttons will use `FlatButton` which is the default pre v1.9.0. As of v1.9.0 the material dialog action button will use the newer material `TextButton`
+
+## PlatformThemeData
+
+Helper function to a `Material` or `Cupertino` theme data property based on the platform
+
+```dart
+Text(
+  platform.text,
+  textAlign: TextAlign.center,
+  style: platformThemeData(
+    context,
+    material: (data) => data.textTheme.headline5,
+    cupertino: (data) => data.textTheme.navTitleTextStyle,
+  ),
+)
+```
+
 ## PlatformIcons
 
-Render a Material or Cupertino looking icon
+Render a `Material` or `Cupertino` looking icon
 
 ```dart
   Icon(context.platformIcons.book)
@@ -612,7 +717,7 @@ See the example code for how this is used.
 
 Please [create](https://github.com/stryder-dev/flutter_platform_widgets/issues/new) an issue to provide feedback or an issue.
 
-# Contributers
+# Contributors
 
 Special thanks for everyone that have contributed to this project...
 
@@ -641,6 +746,8 @@ Special thanks for everyone that have contributed to this project...
 | [![](https://ui-avatars.com/api/?name=AlexIver&size=40)](https://github.com/AlexIver)                 | [AlexIver](https://github.com/AlexIver)                       |
 | [![](https://avatars1.githubusercontent.com/u/35923031?s=40&v=4)](https://github.com/in74mz)          | [in74mz](https://github.com/in74mz)                           |
 | [![](https://avatars0.githubusercontent.com/u/1169185?s=40&v=4)](https://github.com/DFelten)          | [Daniel Felten](https://github.com/DFelten)                    |
+| [![](https://avatars0.githubusercontent.com/u/1911919?s=40&v=4)](https://github.com/hanskokx)          | [Hans Kokx](https://github.com/hanskokx)                    |
+| [![](https://avatars.githubusercontent.com/u/31817177?v=4)](https://github.com/AkshatBaranwal)          | [AkshatBaranwal](https://github.com/AkshatBaranwal)                    |
 
 # Acknowledgements
 

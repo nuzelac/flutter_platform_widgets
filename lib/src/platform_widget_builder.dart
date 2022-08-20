@@ -15,11 +15,12 @@ import 'platform_widget.dart';
 ///
 /// ```
 class PlatformWidgetBuilder extends StatelessWidget {
-  final Widget child;
-  final Widget Function(BuildContext, Widget, PlatformTarget) cupertino;
-  final Widget Function(BuildContext, Widget, PlatformTarget) material;
+  final Widget? child;
+  final Widget? Function(BuildContext, Widget?, PlatformTarget)? cupertino;
+  final Widget? Function(BuildContext, Widget?, PlatformTarget)? material;
 
   PlatformWidgetBuilder({
+    super.key,
     this.cupertino,
     this.material,
     this.child,

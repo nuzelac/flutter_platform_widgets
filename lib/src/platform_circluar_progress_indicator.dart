@@ -13,9 +13,20 @@ import 'widget_base.dart';
 
 const double _kDefaultIndicatorRadius = 10.0;
 
-class MaterialProgressIndicatorData {
-  MaterialProgressIndicatorData({
+abstract class _BaseData {
+  _BaseData({
     this.key,
+    this.color,
+  });
+
+  final Key? key;
+  final Color? color;
+}
+
+class MaterialProgressIndicatorData extends _BaseData {
+  MaterialProgressIndicatorData({
+    super.key,
+    super.color,
     this.backgroundColor,
     this.strokeWidth,
     this.value,
@@ -23,40 +34,40 @@ class MaterialProgressIndicatorData {
     this.semanticsLabel,
     this.semanticsValue,
   });
-  final Key key;
-  final Color backgroundColor;
-  final double strokeWidth;
-  final double value;
-  final Animation<Color> valueColor;
-  final String semanticsLabel;
-  final String semanticsValue;
+
+  final Color? backgroundColor;
+  final double? strokeWidth;
+  final double? value;
+  final Animation<Color>? valueColor;
+  final String? semanticsLabel;
+  final String? semanticsValue;
 }
 
-class CupertinoProgressIndicatorData {
+class CupertinoProgressIndicatorData extends _BaseData {
   CupertinoProgressIndicatorData({
-    this.key,
+    super.key,
+    super.color,
     this.animating,
     this.radius: _kDefaultIndicatorRadius,
   });
 
-  final Key key;
-  final bool animating;
-  final double radius;
+  final bool? animating;
+  final double? radius;
 }
 
 class PlatformCircularProgressIndicator extends PlatformWidgetBase<
     CupertinoActivityIndicator, CircularProgressIndicator> {
-  final Key widgetKey;
+  final Key? widgetKey;
 
-  final PlatformBuilder<MaterialProgressIndicatorData> material;
-  final PlatformBuilder<CupertinoProgressIndicatorData> cupertino;
+  final PlatformBuilder<MaterialProgressIndicatorData>? material;
+  final PlatformBuilder<CupertinoProgressIndicatorData>? cupertino;
 
   PlatformCircularProgressIndicator({
-    Key key,
+    super.key,
     this.widgetKey,
     this.material,
     this.cupertino,
-  }) : super(key: key);
+  });
 
   @override
   CircularProgressIndicator createMaterialWidget(BuildContext context) {
@@ -70,6 +81,7 @@ class PlatformCircularProgressIndicator extends PlatformWidgetBase<
       valueColor: data?.valueColor,
       semanticsLabel: data?.semanticsLabel,
       semanticsValue: data?.semanticsValue,
+      color: data?.color,
     );
   }
 
@@ -81,6 +93,7 @@ class PlatformCircularProgressIndicator extends PlatformWidgetBase<
       key: data?.key ?? widgetKey,
       animating: data?.animating ?? true,
       radius: data?.radius ?? _kDefaultIndicatorRadius,
+      color: data?.color,
     );
   }
 }

@@ -6,69 +6,70 @@
 
 import 'package:flutter/cupertino.dart' show CupertinoTabBar, CupertinoColors;
 import 'package:flutter/material.dart'
-    show BottomAppBar, BottomNavigationBar, BottomNavigationBarType;
-import 'package:flutter/rendering.dart' show MouseCursor;
+    show
+        BottomAppBar,
+        BottomNavigationBar,
+        BottomNavigationBarType,
+        BottomNavigationBarLandscapeLayout;
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
 import 'widget_base.dart';
 
+// Standard iOS 10 tab bar height.
+const double _kTabBarHeight = 50.0;
 const Color _kDefaultTabBarBorderColor = Color(0x4C000000);
 const Color _kDefaultTabBarInactiveColor = CupertinoColors.inactiveGray;
 
 abstract class _BaseData {
-  _BaseData(
-      {this.widgetKey,
-      this.items,
-      this.backgroundColor,
-      this.iconSize,
-      this.activeColor,
-      this.currentIndex,
-      this.itemChanged});
+  _BaseData({
+    this.widgetKey,
+    this.items,
+    this.backgroundColor,
+    this.iconSize,
+    this.activeColor,
+    this.currentIndex,
+    this.itemChanged,
+  });
 
-  final Key widgetKey;
-  final List<BottomNavigationBarItem> items;
-  final Color backgroundColor;
-  final double iconSize;
-  final Color activeColor;
-  final int currentIndex;
-  final ValueChanged<int> itemChanged;
+  final Key? widgetKey;
+  final List<BottomNavigationBarItem>? items;
+  final Color? backgroundColor;
+  final double? iconSize;
+  final Color? activeColor;
+  final int? currentIndex;
+  final void Function(int)? itemChanged;
 }
 
 class CupertinoTabBarData extends _BaseData {
   CupertinoTabBarData({
-    Color backgroundColor,
-    List<BottomNavigationBarItem> items,
-    Color activeColor,
-    Key widgetKey,
-    ValueChanged<int> itemChanged,
-    double iconSize,
-    int currentIndex,
+    super.backgroundColor,
+    super.items,
+    super.activeColor,
+    super.widgetKey,
+    super.itemChanged,
+    super.iconSize,
+    super.currentIndex,
     this.inactiveColor,
     this.border,
-  }) : super(
-            widgetKey: widgetKey,
-            items: items,
-            backgroundColor: backgroundColor,
-            iconSize: iconSize,
-            activeColor: activeColor,
-            currentIndex: currentIndex,
-            itemChanged: itemChanged);
+    this.height,
+  });
 
-  final Color inactiveColor;
-  final Border border;
+  final Color? inactiveColor;
+  final Border? border;
+  final double? height;
 }
 
 class MaterialNavBarData extends _BaseData {
   MaterialNavBarData({
-    List<BottomNavigationBarItem> items,
-    Color backgroundColor,
-    double iconSize,
+    super.items,
+    super.backgroundColor,
+    super.iconSize,
     this.elevation,
-    Color fixedColor,
-    Key widgetKey,
-    ValueChanged<int> itemChanged,
-    int currentIndex,
+    Color? fixedColor,
+    super.widgetKey,
+    super.itemChanged,
+    super.currentIndex,
     this.type,
     this.bottomNavigationBarKey,
     this.shape,
@@ -85,47 +86,44 @@ class MaterialNavBarData extends _BaseData {
     this.unselectedIconTheme,
     this.unselectedLabelStyle,
     this.mouseCursor,
-  }) : super(
-            widgetKey: widgetKey,
-            items: items,
-            backgroundColor: backgroundColor,
-            iconSize: iconSize,
-            activeColor: fixedColor,
-            currentIndex: currentIndex,
-            itemChanged: itemChanged);
+    this.enableFeedback,
+    this.landscapeLayout,
+  }) : super(activeColor: fixedColor);
 
-  final double selectedFontSize;
-  final double elevation;
-  final BottomNavigationBarType type;
-  final Key bottomNavigationBarKey;
-  final NotchedShape shape;
-  final Clip clipBehavior;
-  final double notchMargin;
-  final Color selectedItemColor;
-  final bool showSelectedLabels;
-  final bool showUnselectedLabels;
-  final double unselectedFontSize;
-  final Color unselectedItemColor;
-  final IconThemeData selectedIconTheme;
-  final TextStyle selectedLabelStyle;
-  final IconThemeData unselectedIconTheme;
-  final TextStyle unselectedLabelStyle;
-  final MouseCursor mouseCursor;
+  final double? selectedFontSize;
+  final double? elevation;
+  final BottomNavigationBarType? type;
+  final Key? bottomNavigationBarKey;
+  final NotchedShape? shape;
+  final Clip? clipBehavior;
+  final double? notchMargin;
+  final Color? selectedItemColor;
+  final bool? showSelectedLabels;
+  final bool? showUnselectedLabels;
+  final double? unselectedFontSize;
+  final Color? unselectedItemColor;
+  final IconThemeData? selectedIconTheme;
+  final TextStyle? selectedLabelStyle;
+  final IconThemeData? unselectedIconTheme;
+  final TextStyle? unselectedLabelStyle;
+  final MouseCursor? mouseCursor;
+  final bool? enableFeedback;
+  final BottomNavigationBarLandscapeLayout? landscapeLayout;
 }
 
 class PlatformNavBar extends PlatformWidgetBase<CupertinoTabBar, BottomAppBar> {
-  final Key widgetKey;
-  final Color backgroundColor;
+  final Key? widgetKey;
+  final Color? backgroundColor;
 
-  final List<BottomNavigationBarItem> items;
-  final ValueChanged<int> itemChanged;
-  final int currentIndex;
+  final List<BottomNavigationBarItem>? items;
+  final void Function(int)? itemChanged;
+  final int? currentIndex;
 
-  final PlatformBuilder<MaterialNavBarData> material;
-  final PlatformBuilder<CupertinoTabBarData> cupertino;
+  final PlatformBuilder<MaterialNavBarData>? material;
+  final PlatformBuilder<CupertinoTabBarData>? cupertino;
 
   PlatformNavBar({
-    Key key,
+    super.key,
     this.widgetKey,
     this.backgroundColor,
     this.items,
@@ -133,14 +131,14 @@ class PlatformNavBar extends PlatformWidgetBase<CupertinoTabBar, BottomAppBar> {
     this.currentIndex,
     this.material,
     this.cupertino,
-  }) : super(key: key);
+  });
 
   @override
   BottomAppBar createMaterialWidget(BuildContext context) {
     final data = material?.call(context, platform(context));
 
     var bar = BottomNavigationBar(
-      items: data?.items ?? items,
+      items: data?.items ?? items ?? const <BottomNavigationBarItem>[],
       currentIndex: data?.currentIndex ?? currentIndex ?? 0,
       onTap: data?.itemChanged ?? itemChanged,
       iconSize: data?.iconSize ?? 24.0,
@@ -160,6 +158,8 @@ class PlatformNavBar extends PlatformWidgetBase<CupertinoTabBar, BottomAppBar> {
       unselectedIconTheme: data?.unselectedIconTheme ?? const IconThemeData(),
       unselectedLabelStyle: data?.unselectedLabelStyle,
       mouseCursor: data?.mouseCursor,
+      enableFeedback: data?.enableFeedback,
+      landscapeLayout: data?.landscapeLayout,
     );
 
     return BottomAppBar(
@@ -178,7 +178,7 @@ class PlatformNavBar extends PlatformWidgetBase<CupertinoTabBar, BottomAppBar> {
     final data = cupertino?.call(context, platform(context));
 
     return CupertinoTabBar(
-      items: data?.items ?? items,
+      items: data?.items ?? items ?? const <BottomNavigationBarItem>[],
       activeColor: data?.activeColor,
       backgroundColor: data?.backgroundColor ?? backgroundColor,
       currentIndex: data?.currentIndex ?? currentIndex ?? 0,
@@ -194,6 +194,7 @@ class PlatformNavBar extends PlatformWidgetBase<CupertinoTabBar, BottomAppBar> {
               style: BorderStyle.solid,
             ),
           ),
+      height: data?.height ?? _kTabBarHeight,
     );
   }
 }

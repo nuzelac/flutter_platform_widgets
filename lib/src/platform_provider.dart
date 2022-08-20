@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 /// A Provider that provides access to the functions of swicthing platforms.
 ///
@@ -24,17 +23,18 @@ import 'package:flutter/widgets.dart';
 /// ```
 class PlatformProvider extends StatefulWidget {
   const PlatformProvider({
-    @required this.builder,
+    required this.builder,
     this.initialPlatform,
     this.settings,
-  }) : assert(builder != null);
+    super.key,
+  });
 
   final WidgetBuilder builder;
-  final TargetPlatform initialPlatform;
-  final PlatformSettingsData settings;
+  final TargetPlatform? initialPlatform;
+  final PlatformSettingsData? settings;
 
-  static PlatformProviderState of(BuildContext context) {
-    _PlatformProviderState state =
+  static PlatformProviderState? of(BuildContext context) {
+    _PlatformProviderState? state =
         context.findAncestorStateOfType<_PlatformProviderState>();
 
     return state?.state;
@@ -45,7 +45,7 @@ class PlatformProvider extends StatefulWidget {
 }
 
 class _PlatformProviderState extends State<PlatformProvider> {
-  TargetPlatform platform;
+  late TargetPlatform? platform;
 
   PlatformProviderState get state => PlatformProviderState._(this);
 
@@ -81,7 +81,7 @@ class _PlatformProviderState extends State<PlatformProvider> {
     });
   }
 
-  PlatformSettingsData get settings => widget.settings;
+  PlatformSettingsData? get settings => widget.settings;
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class PlatformProviderState {
 
   final _PlatformProviderState _parent;
 
-  TargetPlatform get platform => _parent.platform;
+  TargetPlatform? get platform => _parent.platform;
 
   PlatformSettingsData get settings =>
       _parent.settings ?? PlatformSettingsData();
@@ -120,11 +120,22 @@ class PlatformProviderState {
 }
 
 class PlatformSettingsData {
-  /// If there is a mixture of Material and Cupertino widgets it maybe
-  /// useful to wrap in a Material. This will affect font and colors
-  /// particulary ios dark mode may not work as expected.
-  /// Alternatively when using Material widgets ensure that a parent Material widget exists.
+  /// Adds a [Material] widget to [CupertinoScaffold] and [CupertinoTabScaffold] to
+  /// allow for Material widgets to be used. This is required when using a PlatformApp
+  /// since some Material widgets will expect a Material parent, otherwise an exception is thrown.
+  /// Note: This may affect fonts and colors and dark mode may not work in all cases.
+  ///
+  /// Note: This may cause widgtes to show a ripple effect where as before 1.6.0 it did not
   final bool iosUsesMaterialWidgets;
+
+  /// Adds a [Material] widget to [CupertinoScaffold] and [CupertinoTabScaffold] to
+  /// allow for Material widgets to be used. This is required when using a PlatformApp
+  /// since some Material widgets will expect a Material parent, otherwise an exception is thrown.
+  ///  Note: This may affect fonts and colors and dark mode may not work in all cases.
+  ///
+  /// Note: legacyIosUsesMaterialWidgets places the Material widget above the CupertinoScaffold and
+  /// CupertinoTabScaffold widgets matching the behavour before v1.6.0
+  final bool legacyIosUsesMaterialWidgets;
 
   /// The style each platform will use. Either [PlatformStyle.Material] or
   /// [PlatformStyle.Cupertino].
@@ -132,9 +143,9 @@ class PlatformSettingsData {
 
   PlatformSettingsData({
     this.iosUsesMaterialWidgets = false,
+    this.legacyIosUsesMaterialWidgets = false,
     this.platformStyle = const PlatformStyleData(),
-  })  : assert(iosUsesMaterialWidgets != null),
-        assert(platformStyle != null);
+  });
 }
 
 enum PlatformStyle {
@@ -159,12 +170,5 @@ class PlatformStyleData {
     this.web = PlatformStyle.Material,
     this.fuchsia = PlatformStyle.Material,
     this.linux = PlatformStyle.Material,
-  })  : assert(android != null),
-        assert(android != null),
-        assert(ios != null),
-        assert(macos != null),
-        assert(windows != null),
-        assert(web != null),
-        assert(fuchsia != null),
-        assert(linux != null);
+  });
 }

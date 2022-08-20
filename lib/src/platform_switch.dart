@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart' show CupertinoSwitch;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     show MaterialStateProperty, MaterialTapTargetSize, Switch;
-import 'package:flutter/rendering.dart' show MouseCursor;
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
@@ -23,21 +22,20 @@ abstract class _BaseData {
     this.dragStartBehavior,
   });
 
-  final Key widgetKey;
-
-  final bool value;
-  final Color activeColor;
-  final ValueChanged<bool> onChanged;
-  final DragStartBehavior dragStartBehavior;
+  final Key? widgetKey;
+  final bool? value;
+  final Color? activeColor;
+  final void Function(bool)? onChanged;
+  final DragStartBehavior? dragStartBehavior;
 }
 
 class MaterialSwitchData extends _BaseData {
   MaterialSwitchData({
-    Key widgetKey,
-    bool value,
-    ValueChanged<bool> onChanged,
-    Color activeColor,
-    DragStartBehavior dragStartBehavior,
+    super.widgetKey,
+    super.value,
+    super.onChanged,
+    super.activeColor,
+    super.dragStartBehavior,
     this.activeTrackColor,
     this.inactiveThumbColor,
     this.inactiveTrackColor,
@@ -55,73 +53,63 @@ class MaterialSwitchData extends _BaseData {
     this.splashRadius,
     this.thumbColor,
     this.trackColor,
-  }) : super(
-          widgetKey: widgetKey,
-          value: value,
-          onChanged: onChanged,
-          activeColor: activeColor,
-          dragStartBehavior: dragStartBehavior,
-        );
+  });
 
-  final Color activeTrackColor;
-  final Color inactiveThumbColor;
-  final Color inactiveTrackColor;
-  final ImageProvider activeThumbImage;
-  final ImageProvider inactiveThumbImage;
-  final MaterialTapTargetSize materialTapTargetSize;
-  final Color focusColor;
-  final Color hoverColor;
-  final FocusNode focusNode;
-  final bool autofocus;
-  final ImageErrorListener onActiveThumbImageError;
-  final ImageErrorListener onInactiveThumbImageError;
-  final MouseCursor mouseCursor;
-  final MaterialStateProperty<Color> overlayColor;
-  final double splashRadius;
-  final MaterialStateProperty<Color> thumbColor;
-  final MaterialStateProperty<Color> trackColor;
+  final Color? activeTrackColor;
+  final Color? inactiveThumbColor;
+  final Color? inactiveTrackColor;
+  final ImageProvider? activeThumbImage;
+  final ImageProvider? inactiveThumbImage;
+  final MaterialTapTargetSize? materialTapTargetSize;
+  final Color? focusColor;
+  final Color? hoverColor;
+  final FocusNode? focusNode;
+  final bool? autofocus;
+  final ImageErrorListener? onActiveThumbImageError;
+  final ImageErrorListener? onInactiveThumbImageError;
+  final MouseCursor? mouseCursor;
+  final MaterialStateProperty<Color?>? overlayColor;
+  final double? splashRadius;
+  final MaterialStateProperty<Color?>? thumbColor;
+  final MaterialStateProperty<Color?>? trackColor;
 }
 
 class CupertinoSwitchData extends _BaseData {
   CupertinoSwitchData({
-    Key widgetKey,
-    bool value,
-    ValueChanged<bool> onChanged,
-    Color activeColor,
-    DragStartBehavior dragStartBehavior,
+    super.widgetKey,
+    super.value,
+    super.onChanged,
+    super.activeColor,
+    super.dragStartBehavior,
     this.trackColor,
-  }) : super(
-          widgetKey: widgetKey,
-          value: value,
-          onChanged: onChanged,
-          activeColor: activeColor,
-          dragStartBehavior: dragStartBehavior,
-        );
+    this.thumbColor,
+  });
 
-  final Color trackColor;
+  final Color? trackColor;
+  final Color? thumbColor;
 }
 
 class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
-  final Key widgetKey;
+  final Key? widgetKey;
 
   final bool value;
-  final Color activeColor;
-  final ValueChanged<bool> onChanged;
-  final DragStartBehavior dragStartBehavior;
+  final Color? activeColor;
+  final void Function(bool)? onChanged;
+  final DragStartBehavior? dragStartBehavior;
 
-  final PlatformBuilder<MaterialSwitchData> material;
-  final PlatformBuilder<CupertinoSwitchData> cupertino;
+  final PlatformBuilder<MaterialSwitchData>? material;
+  final PlatformBuilder<CupertinoSwitchData>? cupertino;
 
   PlatformSwitch({
-    Key key,
+    super.key,
     this.widgetKey,
-    @required this.value,
-    @required this.onChanged,
+    required this.value,
+    required this.onChanged,
     this.dragStartBehavior,
     this.activeColor,
     this.material,
     this.cupertino,
-  }) : super(key: key);
+  });
 
   @override
   Switch createMaterialWidget(BuildContext context) {
@@ -168,6 +156,7 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
           dragStartBehavior ??
           DragStartBehavior.start,
       trackColor: data?.trackColor,
+      thumbColor: data?.thumbColor,
     );
   }
 }

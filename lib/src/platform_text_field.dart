@@ -15,14 +15,6 @@ import 'package:flutter/cupertino.dart'
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     show InputDecoration, TextField, InputCounterWidgetBuilder;
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart'
-    show
-        Brightness,
-        TextInputFormatter,
-        TextInputType,
-        TextInputAction,
-        TextCapitalization;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 
@@ -45,7 +37,7 @@ const Border _kDefaultRoundedBorder = Border(
   right: _kDefaultRoundedBorderSide,
 );
 
-const BoxDecoration _kDefaultRoundedBorderDecoration = BoxDecoration(
+const BoxDecoration kDefaultRoundedBorderDecoration = BoxDecoration(
   color: CupertinoDynamicColor.withBrightness(
     color: CupertinoColors.white,
     darkColor: CupertinoColors.black,
@@ -54,24 +46,21 @@ const BoxDecoration _kDefaultRoundedBorderDecoration = BoxDecoration(
   borderRadius: BorderRadius.all(Radius.circular(5.0)),
 );
 
-class MaterialTextFieldData {
-  MaterialTextFieldData({
+abstract class _BaseData {
+  _BaseData({
     this.widgetKey,
     this.controller,
     this.focusNode,
-    this.decoration,
     this.keyboardType,
     this.textInputAction,
     this.textCapitalization,
     this.style,
     this.textAlign,
-    this.textDirection,
     this.autofocus,
     this.obscureText,
     this.autocorrect,
     this.maxLines,
     this.maxLength,
-    this.maxLengthEnforced,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
@@ -82,19 +71,18 @@ class MaterialTextFieldData {
     this.cursorColor,
     this.keyboardAppearance,
     this.scrollPadding,
-    this.enableInteractiveSelection,
-    this.onTap,
-    this.buildCounter,
     this.dragStartBehavior,
     this.expands,
     this.minLines,
     this.scrollPhysics,
     this.strutStyle,
+    this.enableInteractiveSelection,
     this.scrollController,
     this.readOnly,
     this.showCursor,
     this.textAlignVertical,
     this.toolbarOptions,
+    this.onTap,
     this.enableSuggestions,
     this.smartDashesType,
     this.smartQuotesType,
@@ -102,76 +90,189 @@ class MaterialTextFieldData {
     this.selectionWidthStyle,
     this.obscuringCharacter,
     this.autofillHints,
-    this.mouseCursor,
-    this.onAppPrivateCommand,
     this.cursorHeight,
     this.restorationId,
     this.maxLengthEnforcement,
     this.selectionControls,
+    this.enableIMEPersonalizedLearning,
+    this.textDirection,
+    this.clipBehavior,
+    this.scribbleEnabled,
   });
 
-  final Key widgetKey;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final InputDecoration decoration;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final TextCapitalization textCapitalization;
-  final TextStyle style;
-  final TextAlign textAlign;
-  final TextDirection textDirection;
-  final bool autofocus;
-  final bool obscureText;
-  final bool autocorrect;
-  final int maxLines;
-  final int maxLength;
-  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
-      'behavior related to the maxLength limit. '
-      'This feature was deprecated after v1.25.0-5.0.pre.')
-  final bool maxLengthEnforced;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onEditingComplete;
-  final ValueChanged<String> onSubmitted;
-  final List<TextInputFormatter> inputFormatters;
-  final bool enabled;
-  final double cursorWidth;
-  final Radius cursorRadius;
-  final Color cursorColor;
-  final Brightness keyboardAppearance;
-  final EdgeInsets scrollPadding;
-  final bool enableInteractiveSelection;
-  final GestureTapCallback onTap;
-  final InputCounterWidgetBuilder buildCounter;
-  final DragStartBehavior dragStartBehavior;
-  final bool expands;
-  final int minLines;
-  final ScrollPhysics scrollPhysics;
-  final StrutStyle strutStyle;
-  final ScrollController scrollController;
-  final bool readOnly;
-  final bool showCursor;
-  final TextAlignVertical textAlignVertical;
-  final ToolbarOptions toolbarOptions;
-  final bool enableSuggestions;
-  final SmartDashesType smartDashesType;
-  final SmartQuotesType smartQuotesType;
-  final ui.BoxHeightStyle selectionHeightStyle;
-  final ui.BoxWidthStyle selectionWidthStyle;
-  final String obscuringCharacter;
-  final Iterable<String> autofillHints;
-  final MouseCursor mouseCursor;
-  final AppPrivateCommandCallback onAppPrivateCommand;
-  final double cursorHeight;
-  final String restorationId;
-  final MaxLengthEnforcement maxLengthEnforcement;
-  final TextSelectionControls selectionControls;
+  final Key? widgetKey;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
+
+  final bool? enableIMEPersonalizedLearning;
+  final Clip? clipBehavior;
+  final bool? scribbleEnabled;
+  final double? cursorHeight;
+  final String? restorationId;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final TextSelectionControls? selectionControls;
+
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization? textCapitalization;
+
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final bool? autofocus;
+  final bool? obscureText;
+  final bool? autocorrect;
+  final int? maxLines;
+  final int? maxLength;
+  final void Function(String)? onChanged;
+  final void Function()? onEditingComplete;
+  final void Function(String)? onSubmitted;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool? enabled;
+  final double? cursorWidth;
+  final Radius? cursorRadius;
+  final Color? cursorColor;
+  final Brightness? keyboardAppearance;
+  final EdgeInsets? scrollPadding;
+
+  final bool? enableInteractiveSelection;
+  final DragStartBehavior? dragStartBehavior;
+  final bool? expands;
+  final int? minLines;
+  final ScrollPhysics? scrollPhysics;
+  final StrutStyle? strutStyle;
+  final ScrollController? scrollController;
+  final bool? readOnly;
+  final bool? showCursor;
+  final TextAlignVertical? textAlignVertical;
+  final GestureTapCallback? onTap;
+  final ToolbarOptions? toolbarOptions;
+  final bool? enableSuggestions;
+  final SmartDashesType? smartDashesType;
+  final SmartQuotesType? smartQuotesType;
+  final ui.BoxHeightStyle? selectionHeightStyle;
+  final ui.BoxWidthStyle? selectionWidthStyle;
+  final String? obscuringCharacter;
+  final Iterable<String>? autofillHints;
 }
 
-class CupertinoTextFieldData {
+class MaterialTextFieldData extends _BaseData {
+  MaterialTextFieldData({
+    super.widgetKey,
+    super.controller,
+    super.focusNode,
+    super.keyboardType,
+    super.textInputAction,
+    super.textCapitalization,
+    super.style,
+    super.textAlign,
+    super.textDirection,
+    super.autofocus,
+    super.obscureText,
+    super.autocorrect,
+    super.maxLines,
+    super.maxLength,
+    super.onChanged,
+    super.onEditingComplete,
+    super.onSubmitted,
+    super.inputFormatters,
+    super.enabled,
+    super.cursorWidth,
+    super.cursorRadius,
+    super.cursorColor,
+    super.keyboardAppearance,
+    super.scrollPadding,
+    super.enableInteractiveSelection,
+    super.onTap,
+    super.dragStartBehavior,
+    super.expands,
+    super.minLines,
+    super.scrollPhysics,
+    super.strutStyle,
+    super.scrollController,
+    super.readOnly,
+    super.showCursor,
+    super.textAlignVertical,
+    super.toolbarOptions,
+    super.enableSuggestions,
+    super.smartDashesType,
+    super.smartQuotesType,
+    super.selectionHeightStyle,
+    super.selectionWidthStyle,
+    super.obscuringCharacter,
+    super.autofillHints,
+    super.cursorHeight,
+    super.restorationId,
+    super.maxLengthEnforcement,
+    super.selectionControls,
+    super.enableIMEPersonalizedLearning,
+    super.clipBehavior,
+    super.scribbleEnabled,
+    this.decoration,
+    this.buildCounter,
+    this.mouseCursor,
+    this.onAppPrivateCommand,
+  });
+
+  final InputDecoration? decoration;
+
+  final InputCounterWidgetBuilder? buildCounter;
+  final MouseCursor? mouseCursor;
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+}
+
+class CupertinoTextFieldData extends _BaseData {
   CupertinoTextFieldData({
-    this.widgetKey,
-    this.controller,
-    this.focusNode,
+    super.widgetKey,
+    super.controller,
+    super.focusNode,
+    super.keyboardType,
+    super.textInputAction,
+    super.textCapitalization,
+    super.style,
+    super.textAlign,
+    super.autofocus,
+    super.obscureText,
+    super.autocorrect,
+    super.maxLines,
+    super.maxLength,
+    super.onChanged,
+    super.onEditingComplete,
+    super.onSubmitted,
+    super.inputFormatters,
+    super.enabled,
+    super.cursorWidth,
+    super.cursorRadius,
+    super.cursorColor,
+    super.keyboardAppearance,
+    super.scrollPadding,
+    super.dragStartBehavior,
+    super.expands,
+    super.minLines,
+    super.scrollPhysics,
+    super.strutStyle,
+    super.enableInteractiveSelection,
+    super.scrollController,
+    super.readOnly,
+    super.showCursor,
+    super.textAlignVertical,
+    super.toolbarOptions,
+    super.onTap,
+    super.enableSuggestions,
+    super.smartDashesType,
+    super.smartQuotesType,
+    super.selectionHeightStyle,
+    super.selectionWidthStyle,
+    super.obscuringCharacter,
+    super.autofillHints,
+    super.cursorHeight,
+    super.restorationId,
+    super.maxLengthEnforcement,
+    super.selectionControls,
+    super.enableIMEPersonalizedLearning,
+    super.textDirection,
+    super.clipBehavior,
+    super.scribbleEnabled,
     this.decoration,
     this.padding,
     this.placeholder,
@@ -181,183 +282,88 @@ class CupertinoTextFieldData {
     this.suffix,
     this.suffixMode,
     this.clearButtonMode,
-    this.keyboardType,
-    this.textInputAction,
-    this.textCapitalization,
-    this.style,
-    this.textAlign,
-    this.autofocus,
-    this.obscureText,
-    this.autocorrect,
-    this.maxLines,
-    this.maxLength,
-    this.maxLengthEnforced,
-    this.onChanged,
-    this.onEditingComplete,
-    this.onSubmitted,
-    this.inputFormatters,
-    this.enabled,
-    this.cursorWidth,
-    this.cursorRadius,
-    this.cursorColor,
-    this.keyboardAppearance,
-    this.scrollPadding,
-    this.dragStartBehavior,
-    this.expands,
-    this.minLines,
-    this.scrollPhysics,
-    this.strutStyle,
-    this.enableInteractiveSelection,
-    this.scrollController,
-    this.readOnly,
-    this.showCursor,
-    this.textAlignVertical,
-    this.toolbarOptions,
-    this.onTap,
-    this.enableSuggestions,
-    this.smartDashesType,
-    this.smartQuotesType,
-    this.selectionHeightStyle,
-    this.selectionWidthStyle,
-    this.obscuringCharacter,
-    this.autofillHints,
-    this.cursorHeight,
-    this.restorationId,
-    this.maxLengthEnforcement,
-    this.selectionControls,
   });
 
-  final Key widgetKey;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final BoxDecoration decoration;
-  final EdgeInsetsGeometry padding;
-  final String placeholder;
-  final TextStyle placeholderStyle;
-  final Widget prefix;
-  final OverlayVisibilityMode prefixMode;
-  final Widget suffix;
-  final OverlayVisibilityMode suffixMode;
-  final OverlayVisibilityMode clearButtonMode;
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final TextCapitalization textCapitalization;
-  final TextStyle style;
-  final TextAlign textAlign;
-  final bool autofocus;
-  final bool obscureText;
-  final bool autocorrect;
-  final int maxLines;
-  final int maxLength;
-  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
-      'behavior related to the maxLength limit. '
-      'This feature was deprecated after v1.25.0-5.0.pre.')
-  final bool maxLengthEnforced;
-  final ValueChanged<String> onChanged;
-  final VoidCallback onEditingComplete;
-  final ValueChanged<String> onSubmitted;
-  final List<TextInputFormatter> inputFormatters;
-  final bool enabled;
-  final double cursorWidth;
-  final Radius cursorRadius;
-  final Color cursorColor;
-  final Brightness keyboardAppearance;
-  final EdgeInsets scrollPadding;
-  final DragStartBehavior dragStartBehavior;
-  final bool expands;
-  final int minLines;
-  final ScrollPhysics scrollPhysics;
-  final StrutStyle strutStyle;
-  final bool enableInteractiveSelection;
-  final ScrollController scrollController;
-  final bool readOnly;
-  final bool showCursor;
-  final TextAlignVertical textAlignVertical;
-  final ToolbarOptions toolbarOptions;
-  final GestureTapCallback onTap;
-  final bool enableSuggestions;
-  final SmartDashesType smartDashesType;
-  final SmartQuotesType smartQuotesType;
-  final ui.BoxHeightStyle selectionHeightStyle;
-  final ui.BoxWidthStyle selectionWidthStyle;
-  final String obscuringCharacter;
-  final Iterable<String> autofillHints;
-  final double cursorHeight;
-  final String restorationId;
-  final MaxLengthEnforcement maxLengthEnforcement;
-  final TextSelectionControls selectionControls;
+  final BoxDecoration? decoration;
+  final EdgeInsetsGeometry? padding;
+  final String? placeholder;
+  final TextStyle? placeholderStyle;
+  final Widget? prefix;
+  final OverlayVisibilityMode? prefixMode;
+  final Widget? suffix;
+  final OverlayVisibilityMode? suffixMode;
+  final OverlayVisibilityMode? clearButtonMode;
 }
 
 class PlatformTextField
     extends PlatformWidgetBase<CupertinoTextField, TextField> {
-  final Key widgetKey;
+  final Key? widgetKey;
 
-  final PlatformBuilder<MaterialTextFieldData> material;
-  final PlatformBuilder<CupertinoTextFieldData> cupertino;
+  final PlatformBuilder<MaterialTextFieldData>? material;
+  final PlatformBuilder<CupertinoTextFieldData>? cupertino;
 
-  final TextEditingController controller;
-  final FocusNode focusNode;
+  final TextEditingController? controller;
+  final FocusNode? focusNode;
 
-  final TextInputType keyboardType;
-  final TextInputAction textInputAction;
-  final TextCapitalization textCapitalization;
+  final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
+  final TextCapitalization? textCapitalization;
 
-  final TextStyle style;
-  final TextAlign textAlign;
-  final bool autofocus;
-  final bool obscureText;
-  final bool autocorrect;
-  final int maxLines;
-  final int maxLength;
-  @Deprecated('Use maxLengthEnforcement parameter which provides more specific '
-      'behavior related to the maxLength limit. '
-      'This feature was deprecated after v1.25.0-5.0.pre.')
-  final bool maxLengthEnforced;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final bool? autofocus;
+  final bool? obscureText;
+  final bool? autocorrect;
+  final int? maxLines;
+  final int? maxLength;
+  final void Function(String)? onChanged;
+  final void Function()? onEditingComplete;
+  final void Function(String)? onSubmitted;
+  final List<TextInputFormatter>? inputFormatters;
+  final bool? enabled;
+  final double? cursorWidth;
+  final Radius? cursorRadius;
+  final DragStartBehavior? dragStartBehavior;
+  final bool? expands;
+  final int? minLines;
+  final ScrollPhysics? scrollPhysics;
+  final StrutStyle? strutStyle;
+  final bool? enableInteractiveSelection;
+  final ScrollController? scrollController;
+  final GestureTapCallback? onTap;
+  final bool? readOnly;
+  final bool? showCursor;
+  final TextAlignVertical? textAlignVertical;
+  final ToolbarOptions? toolbarOptions;
 
-  final ValueChanged<String> onChanged;
-  final VoidCallback onEditingComplete;
-  final ValueChanged<String> onSubmitted;
-  final List<TextInputFormatter> inputFormatters;
-  final bool enabled;
-  final double cursorWidth;
-  final Radius cursorRadius;
-  final DragStartBehavior dragStartBehavior;
-  final bool expands;
-  final int minLines;
-  final ScrollPhysics scrollPhysics;
-  final StrutStyle strutStyle;
-  final bool enableInteractiveSelection;
-  final ScrollController scrollController;
-  final GestureTapCallback onTap;
-  final bool readOnly;
-  final bool showCursor;
-  final TextAlignVertical textAlignVertical;
-  final ToolbarOptions toolbarOptions;
+  final Color? cursorColor;
+  final Brightness? keyboardAppearance;
+  final EdgeInsets? scrollPadding;
 
-  final Color cursorColor;
-  final Brightness keyboardAppearance;
-  final EdgeInsets scrollPadding;
+  final SmartDashesType? smartDashesType;
+  final SmartQuotesType? smartQuotesType;
+  final ui.BoxHeightStyle? selectionHeightStyle;
+  final ui.BoxWidthStyle? selectionWidthStyle;
 
-  final SmartDashesType smartDashesType;
-  final SmartQuotesType smartQuotesType;
-  final ui.BoxHeightStyle selectionHeightStyle;
-  final ui.BoxWidthStyle selectionWidthStyle;
+  final String? obscuringCharacter;
+  final Iterable<String>? autofillHints;
 
-  final String obscuringCharacter;
-  final Iterable<String> autofillHints;
-
-  final double cursorHeight;
-  final String restorationId;
-
-  final MaxLengthEnforcement maxLengthEnforcement;
-  final TextSelectionControls selectionControls;
+  final double? cursorHeight;
+  final String? restorationId;
+  final MaxLengthEnforcement? maxLengthEnforcement;
+  final TextSelectionControls? selectionControls;
+  final bool makeCupertinoDecorationNull;
+  final String? hintText;
+  final bool? enableIMEPersonalizedLearning;
+  final Clip clipBehavior;
+  final bool scribbleEnabled;
 
   PlatformTextField({
-    Key key,
+    super.key,
     this.widgetKey,
     this.controller,
     this.focusNode,
-    TextInputType keyboardType,
+    TextInputType? keyboardType,
     this.textInputAction,
     this.textCapitalization = TextCapitalization.none,
     this.style,
@@ -367,7 +373,6 @@ class PlatformTextField
     this.autocorrect,
     this.maxLines = 1,
     this.maxLength,
-    this.maxLengthEnforced,
     this.onChanged,
     this.onEditingComplete,
     this.onSubmitted,
@@ -400,15 +405,27 @@ class PlatformTextField
     this.restorationId,
     this.maxLengthEnforcement,
     this.selectionControls,
+    this.hintText,
+    this.enableIMEPersonalizedLearning,
+    this.makeCupertinoDecorationNull = false,
+    this.clipBehavior = Clip.hardEdge,
+    this.scribbleEnabled = true,
     this.material,
     this.cupertino,
-  })  : keyboardType = keyboardType ??
-            (maxLines == 1 ? TextInputType.text : TextInputType.multiline),
-        super(key: key);
+  }) : keyboardType = keyboardType ??
+            (maxLines == 1 ? TextInputType.text : TextInputType.multiline);
 
   @override
   TextField createMaterialWidget(BuildContext context) {
     final data = material?.call(context, platform(context));
+
+    final hintText = this.hintText;
+    final decoration = hintText == null
+        ? (data?.decoration ?? const InputDecoration())
+        : _inputDecorationWithHint(
+            hintText,
+            data?.decoration ?? const InputDecoration(),
+          );
 
     return TextField(
       key: data?.widgetKey ?? widgetKey,
@@ -424,7 +441,6 @@ class PlatformTextField
       keyboardAppearance: data?.keyboardAppearance ?? keyboardAppearance,
       keyboardType: data?.keyboardType ?? keyboardType,
       maxLength: data?.maxLength ?? maxLength,
-      maxLengthEnforced: data?.maxLengthEnforced ?? maxLengthEnforced ?? true,
       maxLines: data?.maxLines ?? maxLines,
       obscureText: data?.obscureText ?? obscureText ?? false,
       onChanged: data?.onChanged ?? onChanged,
@@ -438,7 +454,7 @@ class PlatformTextField
           textCapitalization ??
           TextCapitalization.none,
       textInputAction: data?.textInputAction ?? textInputAction,
-      decoration: data?.decoration ?? const InputDecoration(),
+      decoration: decoration,
       textDirection: data?.textDirection,
       buildCounter: data?.buildCounter,
       dragStartBehavior: data?.dragStartBehavior ??
@@ -474,6 +490,12 @@ class PlatformTextField
       restorationId: data?.restorationId ?? restorationId,
       maxLengthEnforcement: data?.maxLengthEnforcement ?? maxLengthEnforcement,
       selectionControls: data?.selectionControls ?? selectionControls,
+      enableIMEPersonalizedLearning: data?.enableIMEPersonalizedLearning ??
+          enableIMEPersonalizedLearning ??
+          true,
+      clipBehavior: data?.clipBehavior ?? clipBehavior,
+      scribbleEnabled: data?.scribbleEnabled ?? scribbleEnabled,
+      //maxLengthEnforced: deprecated
     );
   }
 
@@ -497,7 +519,6 @@ class PlatformTextField
       keyboardAppearance: data?.keyboardAppearance ?? keyboardAppearance,
       keyboardType: data?.keyboardType ?? keyboardType,
       maxLength: data?.maxLength ?? maxLength,
-      maxLengthEnforced: data?.maxLengthEnforced ?? maxLengthEnforced ?? true,
       maxLines: data?.maxLines ?? maxLines,
       obscureText: data?.obscureText ?? obscureText ?? false,
       onChanged: data?.onChanged ?? onChanged,
@@ -511,10 +532,13 @@ class PlatformTextField
           textCapitalization ??
           TextCapitalization.none,
       textInputAction: data?.textInputAction ?? textInputAction,
-      decoration: data?.decoration ?? _kDefaultRoundedBorderDecoration,
+      decoration: data?.decoration ??
+          (makeCupertinoDecorationNull
+              ? null
+              : kDefaultRoundedBorderDecoration),
       clearButtonMode: data?.clearButtonMode ?? OverlayVisibilityMode.never,
       padding: data?.padding ?? const EdgeInsets.all(6.0),
-      placeholder: data?.placeholder,
+      placeholder: data?.placeholder ?? hintText,
       placeholderStyle: data?.placeholderStyle ??
           const TextStyle(
             fontWeight: FontWeight.w400,
@@ -555,6 +579,22 @@ class PlatformTextField
       restorationId: data?.restorationId ?? restorationId,
       maxLengthEnforcement: data?.maxLengthEnforcement ?? maxLengthEnforcement,
       selectionControls: data?.selectionControls ?? selectionControls,
+      enableIMEPersonalizedLearning: data?.enableIMEPersonalizedLearning ??
+          enableIMEPersonalizedLearning ??
+          true,
+      textDirection: data?.textDirection,
+      clipBehavior: data?.clipBehavior ?? clipBehavior,
+      scribbleEnabled: data?.scribbleEnabled ?? scribbleEnabled,
+      //maxLengthEnforced: deprecated
+    );
+  }
+
+  InputDecoration _inputDecorationWithHint(
+    String hintText,
+    InputDecoration inputDecoration,
+  ) {
+    return inputDecoration.copyWith(
+      hintText: inputDecoration.hintText ?? hintText,
     );
   }
 }
