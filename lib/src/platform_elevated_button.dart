@@ -6,7 +6,8 @@
 
 import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoColors, CupertinoTheme;
-import 'package:flutter/material.dart' show ElevatedButton, ButtonStyle;
+import 'package:flutter/material.dart'
+    show ElevatedButton, ButtonStyle, MaterialStatesController;
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
@@ -39,6 +40,7 @@ class MaterialElevatedButtonData extends _BaseData {
     this.icon,
     this.onHover,
     this.onFocusChange,
+    this.statesController,
   });
 
   final VoidCallback? onLongPress;
@@ -49,6 +51,7 @@ class MaterialElevatedButtonData extends _BaseData {
   final Widget? icon;
   final ValueChanged<bool>? onHover;
   final ValueChanged<bool>? onFocusChange;
+  final MaterialStatesController? statesController;
 }
 
 class CupertinoElevatedButtonData extends _BaseData {
@@ -122,12 +125,13 @@ class PlatformElevatedButton
         focusNode: data?.focusNode,
         style: data?.style ??
             ElevatedButton.styleFrom(
-              primary: color,
+              backgroundColor: color,
               padding: padding,
               alignment: alignment,
             ),
         onHover: data?.onHover,
         onFocusChange: data?.onFocusChange,
+        statesController: data?.statesController,
       );
     }
 
@@ -141,12 +145,13 @@ class PlatformElevatedButton
       focusNode: data?.focusNode,
       style: data?.style ??
           ElevatedButton.styleFrom(
-            primary: color,
+            backgroundColor: color,
             padding: padding,
             alignment: alignment,
           ),
       onHover: data?.onHover,
       onFocusChange: data?.onFocusChange,
+      statesController: data?.statesController,
     );
   }
 
@@ -166,7 +171,7 @@ class PlatformElevatedButton
         disabledColor:
             data?.disabledColor ?? CupertinoColors.quaternarySystemFill,
         alignment: data?.alignment ?? alignment ?? Alignment.center,
-        color: color ?? data?.color,
+        color: data?.color ?? color,
       );
     } else {
       final button = CupertinoButton.filled(

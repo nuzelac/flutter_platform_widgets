@@ -111,94 +111,153 @@ PlatformTarget platform(BuildContext context) {
   }
 }
 
+abstract class _DialogBaseData {
+  final WidgetBuilder? builder;
+  final bool? barrierDismissible;
+  final RouteSettings? routeSettings;
+  final bool? useRootNavigator;
+  final String? barrierLabel;
+  final Offset? anchorPoint;
+
+  _DialogBaseData({
+    this.builder,
+    this.barrierDismissible,
+    this.routeSettings,
+    this.useRootNavigator,
+    this.barrierLabel,
+    this.anchorPoint,
+  });
+}
+
+class MaterialDialogData extends _DialogBaseData {
+  final bool? useSafeArea;
+  final Color? barrierColor;
+
+  MaterialDialogData({
+    super.builder,
+    super.barrierDismissible,
+    super.routeSettings,
+    super.useRootNavigator,
+    super.barrierLabel,
+    super.anchorPoint,
+    this.useSafeArea,
+    this.barrierColor,
+  });
+}
+
+class CupertinoDialogData extends _DialogBaseData {
+  CupertinoDialogData({
+    super.builder,
+    super.barrierDismissible,
+    super.routeSettings,
+    super.useRootNavigator,
+    super.barrierLabel,
+    super.anchorPoint,
+  });
+}
+
 Future<T?> showPlatformDialog<T>({
   required BuildContext context,
-  required WidgetBuilder builder,
+  MaterialDialogData? material,
+  CupertinoDialogData? cupertino,
+  WidgetBuilder? builder,
   bool? barrierDismissible,
   RouteSettings? routeSettings,
   bool useRootNavigator = true,
-  bool materialUseSafeArea = true,
-  Color? materialBarrierColor = Colors.black54,
+  @Deprecated('Use material.useSafeArea instead')
+      bool materialUseSafeArea = true,
+  @Deprecated('Use material.barrierColor instead')
+      Color? materialBarrierColor = Colors.black54,
   String? barrierLabel,
+  Offset? anchorPoint,
 }) {
   if (isMaterial(context)) {
+    assert(material?.builder != null || builder != null);
+
     return showDialog<T>(
       context: context,
-      builder: builder,
-      barrierDismissible: barrierDismissible ?? true,
-      routeSettings: routeSettings,
-      useRootNavigator: useRootNavigator,
-      useSafeArea: materialUseSafeArea,
-      //child: , deprecated
-      barrierColor: materialBarrierColor,
-      barrierLabel: barrierLabel,
+      builder: material?.builder ?? builder!,
+      barrierDismissible:
+          material?.barrierDismissible ?? barrierDismissible ?? true,
+      routeSettings: material?.routeSettings ?? routeSettings,
+      useRootNavigator: material?.useRootNavigator ?? useRootNavigator,
+      useSafeArea: material?.useSafeArea ?? materialUseSafeArea,
+      barrierColor: material?.barrierColor ?? materialBarrierColor,
+      barrierLabel: material?.barrierLabel ?? barrierLabel,
+      anchorPoint: material?.anchorPoint ?? anchorPoint,
     );
   } else {
+    assert(cupertino?.builder != null || builder != null);
+
     return showCupertinoDialog<T>(
       context: context,
-      builder: builder,
-      routeSettings: routeSettings,
-      useRootNavigator: useRootNavigator,
-      barrierDismissible: barrierDismissible ?? false,
-      barrierLabel: barrierLabel,
+      builder: cupertino?.builder ?? builder!,
+      routeSettings: cupertino?.routeSettings ?? routeSettings,
+      useRootNavigator: cupertino?.useRootNavigator ?? useRootNavigator,
+      barrierDismissible:
+          cupertino?.barrierDismissible ?? barrierDismissible ?? false,
+      barrierLabel: cupertino?.barrierLabel ?? barrierLabel,
+      anchorPoint: cupertino?.anchorPoint ?? anchorPoint,
     );
   }
 }
 
-abstract class _BaseData {
-  _BaseData({
+abstract class _ModalSheetBaseData {
+  _ModalSheetBaseData({
     this.anchorPoint,
   });
 
   final Offset? anchorPoint;
 }
 
-class MaterialModalSheetData extends _BaseData {
+class MaterialModalSheetData extends _ModalSheetBaseData {
   final Color? backgroundColor;
   final double? elevation;
   final ShapeBorder? shape;
-  final bool isScrollControlled;
-  final bool useRootNavigator;
+  final bool? isScrollControlled;
+  final bool? useRootNavigator;
   final Clip? clipBehavior;
   final Color? barrierColor;
-  final bool enableDrag;
-  final bool isDismissible;
+  final bool? enableDrag;
+  final bool? isDismissible;
   final RouteSettings? routeSettings;
   final AnimationController? transitionAnimationController;
   final BoxConstraints? constraints;
+  final bool? useSafeArea;
 
   MaterialModalSheetData({
     super.anchorPoint,
     this.backgroundColor,
     this.elevation,
     this.shape,
-    this.isScrollControlled = false,
-    this.useRootNavigator = false,
+    this.isScrollControlled,
+    this.useRootNavigator,
     this.clipBehavior,
     this.barrierColor,
-    this.enableDrag = false,
-    this.isDismissible = false,
+    this.enableDrag,
+    this.isDismissible,
     this.routeSettings,
     this.transitionAnimationController,
     this.constraints,
+    this.useSafeArea,
   });
 }
 
-class CupertinoModalSheetData extends _BaseData {
+class CupertinoModalSheetData extends _ModalSheetBaseData {
   final ImageFilter? imageFilter;
   final bool? semanticsDismissible;
-  final bool useRootNavigator;
-  final Color barrierColor;
-  final bool barrierDismissible;
+  final bool? useRootNavigator;
+  final Color? barrierColor;
+  final bool? barrierDismissible;
   final RouteSettings? routeSettings;
 
   CupertinoModalSheetData({
     super.anchorPoint,
     this.imageFilter,
     this.semanticsDismissible,
-    this.useRootNavigator = true,
-    this.barrierColor = _kModalBarrierColor,
-    this.barrierDismissible = true,
+    this.useRootNavigator,
+    this.barrierColor,
+    this.barrierDismissible,
     this.routeSettings,
   });
 }
@@ -228,17 +287,19 @@ Future<T?> showPlatformModalSheet<T>({
       transitionAnimationController: material?.transitionAnimationController,
       constraints: material?.constraints,
       anchorPoint: material?.anchorPoint,
+      useSafeArea: material?.useSafeArea ?? false,
     );
   } else {
     return showCupertinoModalPopup<T>(
-        context: context,
-        builder: builder,
-        filter: cupertino?.imageFilter,
-        semanticsDismissible: cupertino?.semanticsDismissible ?? false,
-        useRootNavigator: cupertino?.useRootNavigator ?? true,
-        barrierColor: cupertino?.barrierColor ?? _kModalBarrierColor,
-        barrierDismissible: cupertino?.barrierDismissible ?? true,
-        routeSettings: cupertino?.routeSettings,
-        anchorPoint: cupertino?.anchorPoint);
+      context: context,
+      builder: builder,
+      filter: cupertino?.imageFilter,
+      semanticsDismissible: cupertino?.semanticsDismissible ?? false,
+      useRootNavigator: cupertino?.useRootNavigator ?? true,
+      barrierColor: cupertino?.barrierColor ?? _kModalBarrierColor,
+      barrierDismissible: cupertino?.barrierDismissible ?? true,
+      routeSettings: cupertino?.routeSettings,
+      anchorPoint: cupertino?.anchorPoint,
+    );
   }
 }

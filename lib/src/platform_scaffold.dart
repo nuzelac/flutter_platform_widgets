@@ -67,6 +67,7 @@ class MaterialScaffoldData extends _BaseData {
     this.restorationId,
     this.onDrawerChanged,
     this.onEndDrawerChanged,
+    this.persistentFooterAlignment,
   });
 
   final PreferredSizeWidget? appBar;
@@ -90,6 +91,7 @@ class MaterialScaffoldData extends _BaseData {
   final String? restorationId;
   final DrawerCallback? onDrawerChanged;
   final DrawerCallback? onEndDrawerChanged;
+  final AlignmentDirectional? persistentFooterAlignment;
 }
 
 class CupertinoPageScaffoldData extends _BaseData {
@@ -176,6 +178,8 @@ class PlatformScaffold extends PlatformWidgetBase<Widget, Scaffold> {
       onDrawerChanged: data?.onDrawerChanged,
       onEndDrawerChanged: data?.onEndDrawerChanged,
       restorationId: data?.restorationId,
+      persistentFooterAlignment:
+          data?.persistentFooterAlignment ?? AlignmentDirectional.centerEnd,
     );
   }
 

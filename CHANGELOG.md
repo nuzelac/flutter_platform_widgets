@@ -1,3 +1,104 @@
+## [3.3.5]
+
+#### (Flutter version support: v3.7.0 - 3.7.12)
+
+- Fix material dialog action button padding. Will use default padding
+
+## [3.3.4]
+
+#### (Flutter version support: v3.7.0 - 3.7.12)
+
+- Fix for PlatformApp not using the correct theme data in dark mode
+
+## [3.3.3]
+
+#### (Flutter version support: v3.7.0 - 3.7.12)
+
+- Added missing parameters (thanks nikeorever)
+
+## [3.3.2]
+
+#### (Flutter version support: v3.7.0 - 3.7.12)
+
+- REmoved debug print statement
+
+## [3.3.1]
+
+#### (Flutter version support: v3.7.0 - 3.7.7)
+
+- Added `WidgetsBindingObserver` to `PlatformTheme` so the brightness changes can be reflected in the app whn brought from the background.
+
+## [3.3.0]
+
+#### (Flutter version support: v3.7.0 - 3.7.7)
+
+- Added PlatformTheme which allows to set the cupertino and material dark and light themes in one place. The PlatformApp will automatically get the right Theme or CupertinoTheme based on the ThemeMode.
+- PlatformTheme can be set the ThemeMode, darl, light or system and will rerender the PlatformApp with the correct mode.
+- PlatformTheme provides a callback to when the themeMode changes in order the application to save the state. This library will not store the current state of the themeMode
+
+## [3.2.1] - March 19, 2023
+
+#### (Flutter version support: v3.7.0 - 3.7.7)
+
+- Fixed incorrectly removed code on `PlatformText` from v3.1.0. for material it will uppercase the text while leaving the cupertino version of the text the same. If you want the same casing between both material and cupertino then simply use `Text`
+
+## [3.2.0] - March 19, 2023
+
+#### (Flutter version support: v3.7.0 - 3.7.7)
+
+- Added MediaQuery wrap for CupertinoNavigationBar title as it is mentioned in this flutter issue: https://github.com/flutter/flutter/issues/42759#issuecomment-591087271. Not added for the CupertinoNavigationBarBackButton due to this issue: https://github.com/flutter/flutter/issues/89888
+- Control the MediaQuery wrap via PlatformProvider settings wrapCupertinoAppBarMiddleWithMediaQuery which is set to true by default
+
+## [3.1.0] - March 17, 2023
+
+#### (Flutter version support: v3.7.0 - 3.7.7)
+
+- Added PlatformListTile (thanks patricknicolosi)
+
+## [3.0.0] - January 28, 2023
+
+#### (Flutter version support: v3.7.0)
+
+- Added extra properties to the widgets that have been added to flutter 3.7
+- `toolbarOptions` on `PlatformTextFormField` and `PlatformTextField` is deprecated by flutter. Switch to contextMenuBuilder. `toolbarOptions` property will be removed from this library in a future release.
+- Min dart version set to v2.19
+
+## [2.2.6] - January 25, 2023
+
+- Fixed issue with `PlatformAlertDialog` where it would not work if the dialog has a material widget. (thanks josxha)
+
+## [2.2.5] - January 19, 2023
+
+- Fixed issue with `showPlatformDialog`. (thanks tmaihoff)
+
+## [2.2.4] - January 15, 2023
+
+Version update
+
+## [2.2.0] - January 14, 2023
+
+#### (Flutter version support: v3.3.10)
+
+- Added extra properties to the widgets that have been added to flutter
+- Added material and cupertino options to the `showPlatformDialog` function.
+- `materialUseSafeArea` and `materialBarrierColor` are now deprecated on `showPlatformDialog`.
+
+## [2.1.1] - January 14, 2023
+
+#### (Flutter version support: v3.3.0)
+
+- Added missing padding on the `PlatformIconButton`
+
+## [2.1.0] - January 13, 2023
+
+#### (Flutter version support: v3.3.0)
+
+- Added routerConfig into `PlatformApp`. (thanks Yoann-TYT)
+- Added config iosUseZeroPaddingForAppbarPlatformIcon setting so it is no longer needed to set EdgeInserts.zero on the PlatformIcon when added to the PlatformAppBar for ios
+- Added PopupMenuDivider as an option for Material popup menus. Simply add `withDivider: true,` to the `MaterialPopupMenuOptionData` and it will add a divider above the menu option specified
+- Material ElevatedButton and TextButton stylilng uses now `background` color instead ofthe deprecated `primary` color property.
+- Updated Readme so that most of the information can be viewed from the wiki. https://github.com/stryder-dev/flutter_platform_widgets/wiki
+
 ## [2.0.0] - June 08, 2022
 
 #### (Flutter version support: v3.0.0)

@@ -5,10 +5,12 @@
  */
 
 import 'package:flutter/cupertino.dart' show CupertinoAlertDialog;
-import 'package:flutter/material.dart' show AlertDialog;
+import 'package:flutter/material.dart' show AlertDialog, Material;
 import 'package:flutter/widgets.dart';
+import 'package:flutter_platform_widgets/src/extensions.dart';
 
 import 'platform.dart';
+import 'platform_provider.dart';
 import 'widget_base.dart';
 
 const EdgeInsets _defaultInsetPadding =
@@ -52,6 +54,11 @@ class MaterialAlertDialogData extends _BaseData {
     this.actionsAlignment,
     this.alignment,
     this.actionsOverflowAlignment,
+    this.icon,
+    this.iconColor,
+    this.iconPadding,
+    this.shadowColor,
+    this.surfaceTintColor,
   });
 
   final EdgeInsetsGeometry? contentPadding;
@@ -72,6 +79,11 @@ class MaterialAlertDialogData extends _BaseData {
   final MainAxisAlignment? actionsAlignment;
   final AlignmentGeometry? alignment;
   final OverflowBarAlignment? actionsOverflowAlignment;
+  final Widget? icon;
+  final Color? iconColor;
+  final EdgeInsetsGeometry? iconPadding;
+  final Color? shadowColor;
+  final Color? surfaceTintColor;
 }
 
 class CupertinoAlertDialogData extends _BaseData {
@@ -92,8 +104,7 @@ class CupertinoAlertDialogData extends _BaseData {
   final Duration? insetAnimationDuration;
 }
 
-class PlatformAlertDialog
-    extends PlatformWidgetBase<CupertinoAlertDialog, AlertDialog> {
+class PlatformAlertDialog extends PlatformWidgetBase<Widget, AlertDialog> {
   final Key? widgetKey;
   final List<Widget>? actions;
   final Widget? content;
@@ -120,8 +131,7 @@ class PlatformAlertDialog
       key: data?.widgetKey ?? widgetKey,
       actions: data?.actions ?? actions,
       content: data?.content ?? content,
-      contentPadding: data?.contentPadding ??
-          const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
+      contentPadding: data?.contentPadding,
       semanticLabel: data?.semanticLabel,
       title: data?.title ?? title,
       titlePadding: data?.titlePadding,
@@ -132,7 +142,7 @@ class PlatformAlertDialog
       titleTextStyle: data?.titleTextStyle,
       scrollable: data?.scrollable ?? false,
       actionsOverflowDirection: data?.actionsOverflowDirection,
-      actionsPadding: data?.actionsPadding ?? EdgeInsets.zero,
+      actionsPadding: data?.actionsPadding,
       buttonPadding: data?.buttonPadding,
       actionsOverflowButtonSpacing: data?.actionsOverflowButtonSpacing,
       clipBehavior: data?.clipBehavior ?? Clip.none,
@@ -140,19 +150,29 @@ class PlatformAlertDialog
       actionsAlignment: data?.actionsAlignment,
       alignment: data?.alignment,
       actionsOverflowAlignment: data?.actionsOverflowAlignment,
+      icon: data?.icon,
+      iconColor: data?.iconColor,
+      iconPadding: data?.iconPadding,
+      shadowColor: data?.shadowColor,
+      surfaceTintColor: data?.surfaceTintColor,
     );
   }
 
   @override
-  CupertinoAlertDialog createCupertinoWidget(BuildContext context) {
+  Widget createCupertinoWidget(BuildContext context) {
     final data = cupertino?.call(context, platform(context));
 
     Curve? curve = data?.insetAnimationCurve;
 
-    return CupertinoAlertDialog(
+    final providerState = PlatformProvider.of(context);
+    final useLegacyMaterial =
+        providerState?.settings.legacyIosUsesMaterialWidgets ?? false;
+    final useMaterial = providerState?.settings.iosUsesMaterialWidgets ?? false;
+
+    final result = CupertinoAlertDialog(
       key: data?.widgetKey ?? widgetKey,
       actions: data?.actions ?? actions ?? const <Widget>[],
-      content: data?.content ?? content,
+      content: (data?.content ?? content)?.withMaterial(useMaterial),
       scrollController: data?.scrollController,
       actionScrollController: data?.actionScrollController,
       title: data?.title ?? title,
@@ -160,5 +180,10 @@ class PlatformAlertDialog
       insetAnimationDuration:
           data?.insetAnimationDuration ?? Duration(milliseconds: 100),
     );
+
+    // Ensure that there is Material widget at the root page level
+    // as there can be Material widgets used on ios
+    return result.withMaterial(useLegacyMaterial &&
+        context.findAncestorWidgetOfExactType<Material>() == null);
   }
 }

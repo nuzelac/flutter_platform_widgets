@@ -16,11 +16,14 @@ export 'src/platform.dart'
         showPlatformModalSheet,
         MaterialModalSheetData,
         CupertinoModalSheetData,
+        MaterialDialogData,
+        CupertinoDialogData,
         PlatformTarget;
+export 'src/platform_list_tile.dart';
 export 'src/platform_alert_dialog.dart';
 export 'src/platform_app.dart';
 export 'src/platform_app_bar.dart';
-export 'src/platform_circluar_progress_indicator.dart';
+export 'src/platform_circular_progress_indicator.dart';
 export 'src/platform_date_picker.dart';
 export 'src/platform_dialog_action.dart';
 export 'src/platform_elevated_button.dart';
@@ -39,6 +42,7 @@ export 'src/platform_text.dart';
 export 'src/platform_text_button.dart';
 export 'src/platform_text_field.dart';
 export 'src/platform_text_form_field.dart';
+export 'src/platform_theme.dart';
 export 'src/platform_widget.dart';
 export 'src/platform_widget_builder.dart';
 export 'src/widget_base.dart';

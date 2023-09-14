@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart'
     show CupertinoActionSheet, CupertinoActionSheetAction;
 import 'package:flutter/material.dart'
     show
+        MaterialStateProperty,
         PopupMenuButton,
         PopupMenuCanceled,
+        PopupMenuDivider,
+        PopupMenuEntry,
         PopupMenuItem,
         PopupMenuItemBuilder,
         PopupMenuPosition,
@@ -13,6 +16,8 @@ import 'package:flutter/widgets.dart';
 import 'platform.dart';
 import 'platform_widget.dart';
 import 'widget_base.dart';
+
+const double _kMenuDividerHeight = 16.0;
 
 class PopupMenuOption {
   final String? label;
@@ -46,6 +51,9 @@ class MaterialPopupMenuOptionData extends _BaseData {
   final VoidCallback? onTap;
   final EdgeInsets? padding;
   final TextStyle? textStyle;
+  final bool withDivider;
+  final double dividerHeight;
+  final MaterialStateProperty<TextStyle?>? labelTextStyle;
 
   MaterialPopupMenuOptionData({
     super.key,
@@ -56,6 +64,9 @@ class MaterialPopupMenuOptionData extends _BaseData {
     this.onTap,
     this.padding,
     this.textStyle,
+    this.withDivider = false,
+    this.dividerHeight = _kMenuDividerHeight,
+    this.labelTextStyle,
   });
 }
 
@@ -92,6 +103,10 @@ class MaterialPopupMenuData {
   final BoxConstraints? constraints;
   final PopupMenuPosition? position;
   final double? splashRadius;
+  final Clip clipBehavior;
+  final VoidCallback? onOpened;
+  final Color? shadowColor;
+  final Color? surfaceTintColor;
 
   MaterialPopupMenuData({
     this.key,
@@ -112,6 +127,10 @@ class MaterialPopupMenuData {
     this.constraints,
     this.position,
     this.splashRadius,
+    this.clipBehavior = Clip.none,
+    this.onOpened,
+    this.shadowColor,
+    this.surfaceTintColor,
   });
 }
 
@@ -234,23 +253,32 @@ class PlatformPopupMenu extends StatelessWidget {
       },
       icon: data?.icon ?? icon,
       itemBuilder: data?.itemBuilder ??
-          (context) => options.map(
-                (option) {
-                  final data =
-                      option.material?.call(context, platform(context));
-                  return PopupMenuItem(
-                    value: option,
-                    child: data?.child ?? Text(option.label ?? ""),
-                    enabled: data?.enabled ?? true,
-                    height: data?.height ?? kMinInteractiveDimension,
-                    key: data?.key,
-                    mouseCursor: data?.mouseCursor,
-                    onTap: data?.onTap,
-                    padding: data?.padding,
-                    textStyle: data?.textStyle,
-                  );
-                },
-              ).toList(),
+          (context) {
+            final items = <PopupMenuEntry<PopupMenuOption>>[];
+            for (final option in options) {
+              final data = option.material?.call(context, platform(context));
+              items.add(PopupMenuItem<PopupMenuOption>(
+                value: option,
+                child: data?.child ?? Text(option.label ?? ""),
+                enabled: data?.enabled ?? true,
+                height: data?.height ?? kMinInteractiveDimension,
+                key: data?.key,
+                mouseCursor: data?.mouseCursor,
+                onTap: data?.onTap,
+                padding: data?.padding,
+                textStyle: data?.textStyle,
+                labelTextStyle: data?.labelTextStyle,
+              ));
+              if (data?.withDivider ?? false) {
+                items.add(
+                  PopupMenuDivider(
+                    height: data?.dividerHeight ?? _kMenuDividerHeight,
+                  ),
+                );
+              }
+            }
+            return items;
+          },
       child: data?.child,
       color: data?.color,
       elevation: data?.elevation,
@@ -267,6 +295,10 @@ class PlatformPopupMenu extends StatelessWidget {
       constraints: data?.constraints,
       position: data?.position ?? PopupMenuPosition.over,
       splashRadius: data?.splashRadius,
+      clipBehavior: data?.clipBehavior ?? Clip.none,
+      onOpened: data?.onOpened,
+      shadowColor: data?.shadowColor,
+      surfaceTintColor: data?.surfaceTintColor,
     );
   }
 }

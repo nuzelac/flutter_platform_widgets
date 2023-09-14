@@ -6,7 +6,8 @@
 
 import 'package:flutter/cupertino.dart'
     show CupertinoButton, CupertinoColors, CupertinoTheme;
-import 'package:flutter/material.dart' show TextButton, ButtonStyle;
+import 'package:flutter/material.dart'
+    show TextButton, ButtonStyle, MaterialStatesController;
 import 'package:flutter/widgets.dart';
 
 import 'platform.dart';
@@ -27,19 +28,19 @@ abstract class _BaseData {
 }
 
 class MaterialTextButtonData extends _BaseData {
-  MaterialTextButtonData({
-    super.widgetKey,
-    super.child,
-    super.onPressed,
-    this.onLongPress,
-    this.focusNode,
-    this.style,
-    this.autofocus,
-    this.clipBehavior,
-    this.icon,
-    this.onHover,
-    this.onFocusChange,
-  });
+  MaterialTextButtonData(
+      {super.widgetKey,
+      super.child,
+      super.onPressed,
+      this.onLongPress,
+      this.focusNode,
+      this.style,
+      this.autofocus,
+      this.clipBehavior,
+      this.icon,
+      this.onHover,
+      this.onFocusChange,
+      this.statesController});
 
   final VoidCallback? onLongPress;
   final FocusNode? focusNode;
@@ -49,6 +50,7 @@ class MaterialTextButtonData extends _BaseData {
   final Widget? icon;
   final ValueChanged<bool>? onHover;
   final ValueChanged<bool>? onFocusChange;
+  final MaterialStatesController? statesController;
 }
 
 class CupertinoTextButtonData extends _BaseData {
@@ -121,12 +123,13 @@ class PlatformTextButton extends PlatformWidgetBase<Widget, TextButton> {
         focusNode: data?.focusNode,
         style: data?.style ??
             TextButton.styleFrom(
-              primary: color,
+              backgroundColor: color,
               padding: padding,
               alignment: alignment,
             ),
         onHover: data?.onHover,
         onFocusChange: data?.onFocusChange,
+        statesController: data?.statesController,
       );
     }
 
@@ -140,12 +143,13 @@ class PlatformTextButton extends PlatformWidgetBase<Widget, TextButton> {
       focusNode: data?.focusNode,
       style: data?.style ??
           TextButton.styleFrom(
-            primary: color,
+            backgroundColor: color,
             padding: padding,
             alignment: alignment,
           ),
       onHover: data?.onHover,
       onFocusChange: data?.onFocusChange,
+      statesController: data?.statesController,
     );
   }
 
@@ -188,7 +192,7 @@ class PlatformTextButton extends PlatformWidgetBase<Widget, TextButton> {
         disabledColor:
             data?.disabledColor ?? CupertinoColors.quaternarySystemFill,
         alignment: data?.alignment ?? alignment ?? Alignment.center,
-        color: color ?? data?.color,
+        color: data?.color ?? color,
       );
     }
   }
