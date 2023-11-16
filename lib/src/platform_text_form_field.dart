@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart'
         CupertinoAdaptiveTextSelectionToolbar,
         CupertinoColors,
         CupertinoTextFormFieldRow;
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart'
     show
         AdaptiveTextSelectionToolbar,
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart'
         TextFormField;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'dart:ui' as ui show BoxHeightStyle, BoxWidthStyle;
 
 import 'platform.dart';
 import 'widget_base.dart';
@@ -31,7 +33,6 @@ abstract class _BaseData {
     this.textAlignVertical,
     this.autofocus,
     this.readOnly,
-    this.toolbarOptions,
     this.showCursor,
     this.obscuringCharacter,
     this.obscureText,
@@ -79,7 +80,6 @@ abstract class _BaseData {
   final TextAlignVertical? textAlignVertical;
   final bool? autofocus;
   final bool? readOnly;
-  final ToolbarOptions? toolbarOptions;
   final bool? showCursor;
   final String? obscuringCharacter;
   final bool? obscureText;
@@ -123,6 +123,18 @@ class MaterialTextFormFieldData extends _BaseData {
   final String? restorationId;
   final MouseCursor? mouseCursor;
   final TapRegionCallback? onTapOutside;
+  final TextMagnifierConfiguration? magnifierConfiguration;
+  final SpellCheckConfiguration? spellCheckConfiguration;
+  final bool? canRequestFocus;
+  final Clip? clipBehavior;
+  final ContentInsertionConfiguration? contentInsertionConfiguration;
+  final bool? cursorOpacityAnimates;
+  final DragStartBehavior? dragStartBehavior;
+  final AppPrivateCommandCallback? onAppPrivateCommand;
+  final bool? scribbleEnabled;
+  final ui.BoxHeightStyle? selectionHeightStyle;
+  final ui.BoxWidthStyle? selectionWidthStyle;
+  final UndoHistoryController? undoController;
 
   MaterialTextFormFieldData({
     super.widgetKey,
@@ -139,11 +151,6 @@ class MaterialTextFormFieldData extends _BaseData {
     super.textAlignVertical,
     super.autofocus,
     super.readOnly,
-    @Deprecated(
-      'Use `contextMenuBuilder` instead. '
-      'This feature was deprecated after v3.3.0-0.5.pre.',
-    )
-        super.toolbarOptions,
     super.showCursor,
     super.obscuringCharacter,
     super.obscureText,
@@ -183,6 +190,18 @@ class MaterialTextFormFieldData extends _BaseData {
     this.restorationId,
     this.mouseCursor,
     this.onTapOutside,
+    this.magnifierConfiguration,
+    this.spellCheckConfiguration,
+    this.canRequestFocus,
+    this.clipBehavior,
+    this.contentInsertionConfiguration,
+    this.cursorOpacityAnimates,
+    this.dragStartBehavior,
+    this.onAppPrivateCommand,
+    this.scribbleEnabled,
+    this.selectionHeightStyle,
+    this.selectionWidthStyle,
+    this.undoController,
   });
 }
 
@@ -208,11 +227,6 @@ class CupertinoTextFormFieldData extends _BaseData {
     super.textAlignVertical,
     super.autofocus,
     super.readOnly,
-    @Deprecated(
-      'Use `contextMenuBuilder` instead. '
-      'This feature was deprecated after v3.3.0-0.5.pre.',
-    )
-        super.toolbarOptions,
     super.showCursor,
     super.obscuringCharacter,
     super.obscureText,
@@ -267,7 +281,6 @@ class PlatformTextFormField
   final TextAlignVertical? textAlignVertical;
   final bool? autofocus;
   final bool? readOnly;
-  final ToolbarOptions? toolbarOptions;
   final bool? showCursor;
   final String? obscuringCharacter;
   final bool? obscureText;
@@ -333,11 +346,6 @@ class PlatformTextFormField
     this.textAlignVertical,
     this.autofocus,
     this.readOnly,
-    @Deprecated(
-      'Use `contextMenuBuilder` instead. '
-      'This feature was deprecated after v3.3.0-0.5.pre.',
-    )
-        this.toolbarOptions,
     this.showCursor,
     this.obscuringCharacter,
     this.obscureText,
@@ -403,7 +411,6 @@ class PlatformTextFormField
       textAlignVertical: data?.textAlignVertical ?? textAlignVertical,
       autofocus: data?.autofocus ?? autofocus ?? false,
       readOnly: data?.readOnly ?? readOnly ?? false,
-      toolbarOptions: data?.toolbarOptions ?? toolbarOptions,
       showCursor: data?.showCursor ?? showCursor,
       obscuringCharacter: data?.obscuringCharacter ?? obscuringCharacter ?? '•',
       obscureText: data?.obscureText ?? obscureText ?? false,
@@ -449,6 +456,20 @@ class PlatformTextFormField
           contextMenuBuilder ??
           _defaultMaterialContextMenuBuilder,
       onTapOutside: data?.onTapOutside,
+      magnifierConfiguration: data?.magnifierConfiguration,
+      spellCheckConfiguration: data?.spellCheckConfiguration,
+      canRequestFocus: data?.canRequestFocus ?? true,
+      clipBehavior: data?.clipBehavior ?? Clip.hardEdge,
+      contentInsertionConfiguration: data?.contentInsertionConfiguration,
+      cursorOpacityAnimates: data?.cursorOpacityAnimates,
+      dragStartBehavior: data?.dragStartBehavior ?? DragStartBehavior.start,
+      onAppPrivateCommand: data?.onAppPrivateCommand,
+      scribbleEnabled: data?.scribbleEnabled ?? true,
+      selectionHeightStyle:
+          data?.selectionHeightStyle ?? ui.BoxHeightStyle.tight,
+      selectionWidthStyle: data?.selectionWidthStyle ?? ui.BoxWidthStyle.tight,
+      undoController: data?.undoController,
+      // toolbarOptions: , Deprecated
     );
   }
 
@@ -473,7 +494,6 @@ class PlatformTextFormField
       textAlignVertical: data?.textAlignVertical ?? textAlignVertical,
       autofocus: data?.autofocus ?? autofocus ?? false,
       readOnly: data?.readOnly ?? readOnly ?? false,
-      toolbarOptions: data?.toolbarOptions ?? toolbarOptions,
       showCursor: data?.showCursor ?? showCursor,
       obscuringCharacter: data?.obscuringCharacter ?? obscuringCharacter ?? '•',
       obscureText: data?.obscureText ?? obscureText ?? false,
@@ -520,6 +540,7 @@ class PlatformTextFormField
       contextMenuBuilder: data?.contextMenuBuilder ??
           contextMenuBuilder ??
           _defaultCupertinoContextMenuBuilder,
+      // toolbarOptions: , Deprecated
     );
   }
 

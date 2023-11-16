@@ -33,6 +33,22 @@ class PlatformPage extends StatelessWidget {
                       : p.changeToMaterialPlatform();
                 }),
           ),
+          if (isMaterial(context))
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: PlatformElevatedButton(
+                  child: PlatformText(
+                      'Change to Material${Theme.of(context).useMaterial3 ? "" : " 3"}'),
+                  onPressed: () {
+                    final isMaterial3 = Theme.of(context).useMaterial3;
+
+                    isMaterial3
+                        ? PlatformTheme.of(context)?.changeToMaterial2(
+                            applyToBothDarkAndLightTheme: true)
+                        : PlatformTheme.of(context)?.changeToMaterial3(
+                            applyToBothDarkAndLightTheme: true);
+                  }),
+            ),
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: PlatformElevatedButton(
@@ -46,6 +62,17 @@ class PlatformPage extends StatelessWidget {
                 }),
           ),
           Divider(thickness: 10),
+          // ! PlatformSearchBar
+          PlatformWidgetExample(
+            title:
+                'PlatformSearchBar ${isMaterial(context) ? " (Material 3 only)" : ""}',
+            builder: (context, platform) => PlatformSearchBar(
+              onChanged: (value) =>
+                  print('${platform.text} SearchBar changed: $value'),
+              onTap: () => print('${platform.text} SearchBar tapped'),
+              hintText: '${platform.text} SearchBar',
+            ),
+          ),
           // ! PlatformListTile
           PlatformWidgetExample(
             title: 'PlatformListTile',
@@ -76,6 +103,52 @@ class PlatformPage extends StatelessWidget {
               cupertino: (_, __) => Text(
                 'Showing ${platform.text}',
                 textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          // ! PlatformCheckbox
+          PlatformWidgetExample(
+            title: 'PlatformCheckbox',
+            builder: (_, __) => StateProvider<bool>(
+              initialValue: false,
+              builder: (_, value, setValue) => PlatformCheckbox(
+                value: value,
+                onChanged: (newValue) {
+                  setValue(newValue!);
+                },
+              ),
+            ),
+          ),
+          // ! PlatformRadio
+          PlatformWidgetExample(
+            title: 'PlatformRadio',
+            builder: (_, platform) => StateProvider<String>(
+              initialValue: 'One',
+              builder: (_, value, setValue) => Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  PlatformRadio<String>(
+                    value: 'One',
+                    groupValue: value,
+                    onChanged: (dynamic newValue) {
+                      setValue(newValue as String);
+                    },
+                  ),
+                  PlatformRadio<String>(
+                    value: 'Two',
+                    groupValue: value,
+                    onChanged: (dynamic newValue) {
+                      setValue(newValue as String);
+                    },
+                  ),
+                  PlatformRadio<String>(
+                    value: 'Three',
+                    groupValue: value,
+                    onChanged: (dynamic newValue) {
+                      setValue(newValue as String);
+                    },
+                  ),
+                ],
               ),
             ),
           ),
@@ -401,6 +474,7 @@ Widget _androidPopupContent(BuildContext context, String text) {
   return Container(
     padding: const EdgeInsets.all(16),
     child: Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         GestureDetector(
           child: Container(

@@ -13,6 +13,10 @@ import 'platform.dart';
 import 'platform_text_button.dart';
 import 'widget_base.dart';
 
+// Values derived from https://developer.apple.com/design/resources/ and on iOS
+// simulators with "Debug View Hierarchy".
+const double _kItemExtent = 32.0;
+
 class DatePickerContentData {
   final DateTime? initialDate;
   final DateTime? firstDate;
@@ -66,6 +70,9 @@ class MaterialDatePickerData extends _BaseData {
     this.fieldLabelText,
     this.anchorPoint,
     this.keyboardType,
+    this.onDatePickerModeChange,
+    this.switchToCalendarEntryModeIcon,
+    this.switchToInputEntryModeIcon,
   });
 
   final DateTime? currentDate;
@@ -86,6 +93,9 @@ class MaterialDatePickerData extends _BaseData {
   final String? fieldLabelText;
   final Offset? anchorPoint;
   final TextInputType? keyboardType;
+  final ValueChanged<DatePickerEntryMode>? onDatePickerModeChange;
+  final Icon? switchToCalendarEntryModeIcon;
+  final Icon? switchToInputEntryModeIcon;
 }
 
 class CupertinoDatePickerData extends _BaseData {
@@ -104,6 +114,8 @@ class CupertinoDatePickerData extends _BaseData {
     this.backgroundColor,
     this.doneLabel,
     this.cancelLabel,
+    this.showDayOfWeek,
+    this.itemExtent,
   });
 
   final Key? key;
@@ -117,6 +129,8 @@ class CupertinoDatePickerData extends _BaseData {
   final Color? backgroundColor;
   final String? doneLabel;
   final String? cancelLabel;
+  final bool? showDayOfWeek;
+  final double? itemExtent;
 }
 
 Future<DateTime?> showPlatformDatePicker({
@@ -153,6 +167,9 @@ Future<DateTime?> showPlatformDatePicker({
       cancelText: data?.cancelText,
       anchorPoint: data?.anchorPoint,
       keyboardType: data?.keyboardType,
+      onDatePickerModeChange: data?.onDatePickerModeChange,
+      switchToCalendarEntryModeIcon: data?.switchToCalendarEntryModeIcon,
+      switchToInputEntryModeIcon: data?.switchToInputEntryModeIcon,
     );
   } else {
     final data = cupertino?.call(context, platform(context));
@@ -249,6 +266,8 @@ class DefaultCupertinoDatePicker extends StatelessWidget {
             minimumYear: data?.minimumYear ?? 1,
             minuteInterval: data?.minuteInterval ?? 1,
             use24hFormat: data?.use24hFormat ?? false,
+            showDayOfWeek: data?.showDayOfWeek ?? false,
+            itemExtent: data?.itemExtent ?? _kItemExtent,
           ),
           Row(
             children: [

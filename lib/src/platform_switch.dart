@@ -20,6 +20,9 @@ abstract class _BaseData {
     this.onChanged,
     this.activeColor,
     this.dragStartBehavior,
+    this.focusNode,
+    this.autofocus,
+    this.onFocusChange,
   });
 
   final Key? widgetKey;
@@ -27,6 +30,9 @@ abstract class _BaseData {
   final Color? activeColor;
   final void Function(bool)? onChanged;
   final DragStartBehavior? dragStartBehavior;
+  final FocusNode? focusNode;
+  final bool? autofocus;
+  final ValueChanged<bool>? onFocusChange;
 }
 
 class MaterialSwitchData extends _BaseData {
@@ -36,6 +42,9 @@ class MaterialSwitchData extends _BaseData {
     super.onChanged,
     super.activeColor,
     super.dragStartBehavior,
+    super.focusNode,
+    super.autofocus,
+    super.onFocusChange,
     this.activeTrackColor,
     this.inactiveThumbColor,
     this.inactiveTrackColor,
@@ -44,8 +53,6 @@ class MaterialSwitchData extends _BaseData {
     this.materialTapTargetSize,
     this.focusColor,
     this.hoverColor,
-    this.focusNode,
-    this.autofocus,
     this.onActiveThumbImageError,
     this.onInactiveThumbImageError,
     this.mouseCursor,
@@ -53,8 +60,9 @@ class MaterialSwitchData extends _BaseData {
     this.splashRadius,
     this.thumbColor,
     this.trackColor,
-    this.onFocusChange,
     this.thumbIcon,
+    this.trackOutlineColor,
+    this.trackOutlineWidth,
   });
 
   final Color? activeTrackColor;
@@ -65,8 +73,6 @@ class MaterialSwitchData extends _BaseData {
   final MaterialTapTargetSize? materialTapTargetSize;
   final Color? focusColor;
   final Color? hoverColor;
-  final FocusNode? focusNode;
-  final bool? autofocus;
   final ImageErrorListener? onActiveThumbImageError;
   final ImageErrorListener? onInactiveThumbImageError;
   final MouseCursor? mouseCursor;
@@ -74,8 +80,9 @@ class MaterialSwitchData extends _BaseData {
   final double? splashRadius;
   final MaterialStateProperty<Color?>? thumbColor;
   final MaterialStateProperty<Color?>? trackColor;
-  final ValueChanged<bool>? onFocusChange;
   final MaterialStateProperty<Icon?>? thumbIcon;
+  final MaterialStateProperty<Color?>? trackOutlineColor;
+  final MaterialStateProperty<double?>? trackOutlineWidth;
 }
 
 class CupertinoSwitchData extends _BaseData {
@@ -85,12 +92,19 @@ class CupertinoSwitchData extends _BaseData {
     super.onChanged,
     super.activeColor,
     super.dragStartBehavior,
+    super.focusNode,
+    super.autofocus,
+    super.onFocusChange,
     this.trackColor,
     this.thumbColor,
+    this.applyTheme,
+    this.focusColor,
   });
 
   final Color? trackColor;
   final Color? thumbColor;
+  final bool? applyTheme;
+  final Color? focusColor;
 }
 
 class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
@@ -100,6 +114,9 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
   final Color? activeColor;
   final void Function(bool)? onChanged;
   final DragStartBehavior? dragStartBehavior;
+  final bool? autofocus;
+  final FocusNode? focusNode;
+  final ValueChanged<bool>? onFocusChange;
 
   final PlatformBuilder<MaterialSwitchData>? material;
   final PlatformBuilder<CupertinoSwitchData>? cupertino;
@@ -111,6 +128,9 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
     required this.onChanged,
     this.dragStartBehavior,
     this.activeColor,
+    this.autofocus,
+    this.focusNode,
+    this.onFocusChange,
     this.material,
     this.cupertino,
   });
@@ -133,9 +153,9 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
       dragStartBehavior: data?.dragStartBehavior ??
           dragStartBehavior ??
           DragStartBehavior.start,
-      autofocus: data?.autofocus ?? false,
+      autofocus: data?.autofocus ?? autofocus ?? false,
       focusColor: data?.focusColor,
-      focusNode: data?.focusNode,
+      focusNode: data?.focusNode ?? focusNode,
       hoverColor: data?.hoverColor,
       onActiveThumbImageError: data?.onActiveThumbImageError,
       onInactiveThumbImageError: data?.onInactiveThumbImageError,
@@ -144,8 +164,10 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
       splashRadius: data?.splashRadius,
       thumbColor: data?.thumbColor,
       trackColor: data?.trackColor,
-      onFocusChange: data?.onFocusChange,
+      onFocusChange: data?.onFocusChange ?? onFocusChange,
       thumbIcon: data?.thumbIcon,
+      trackOutlineColor: data?.trackOutlineColor,
+      trackOutlineWidth: data?.trackOutlineWidth,
     );
   }
 
@@ -163,6 +185,11 @@ class PlatformSwitch extends PlatformWidgetBase<CupertinoSwitch, Switch> {
           DragStartBehavior.start,
       trackColor: data?.trackColor,
       thumbColor: data?.thumbColor,
+      applyTheme: data?.applyTheme,
+      focusColor: data?.focusColor,
+      autofocus: data?.autofocus ?? autofocus ?? false,
+      focusNode: data?.focusNode ?? focusNode,
+      onFocusChange: data?.onFocusChange ?? onFocusChange,
     );
   }
 }
