@@ -19,6 +19,8 @@ import 'package:flutter/material.dart'
 import 'package:flutter/widgets.dart';
 import 'package:flutter_platform_widgets/flutter_platform_widgets.dart';
 
+const double _defaultScrollControlDisabledMaxHeightRatio = 9.0 / 16.0;
+
 const Color _kModalBarrierColor = CupertinoDynamicColor.withBrightness(
   color: Color(0x33000000),
   darkColor: Color(0x7A000000),
@@ -132,6 +134,7 @@ abstract class _DialogBaseData {
 class MaterialDialogData extends _DialogBaseData {
   final bool? useSafeArea;
   final Color? barrierColor;
+  final TraversalEdgeBehavior? traversalEdgeBehavior;
 
   MaterialDialogData({
     super.builder,
@@ -142,6 +145,7 @@ class MaterialDialogData extends _DialogBaseData {
     super.anchorPoint,
     this.useSafeArea,
     this.barrierColor,
+    this.traversalEdgeBehavior,
   });
 }
 
@@ -181,6 +185,7 @@ Future<T?> showPlatformDialog<T>({
       barrierColor: material?.barrierColor ?? Colors.black54,
       barrierLabel: material?.barrierLabel ?? barrierLabel,
       anchorPoint: material?.anchorPoint ?? anchorPoint,
+      traversalEdgeBehavior: material?.traversalEdgeBehavior,
     );
   } else {
     assert(cupertino?.builder != null || builder != null);
@@ -220,6 +225,9 @@ class MaterialModalSheetData extends _ModalSheetBaseData {
   final AnimationController? transitionAnimationController;
   final BoxConstraints? constraints;
   final bool? useSafeArea;
+  String? barrierLabel;
+  double? scrollControlDisabledMaxHeightRatio;
+  bool? showDragHandle;
 
   MaterialModalSheetData({
     super.anchorPoint,
@@ -236,6 +244,9 @@ class MaterialModalSheetData extends _ModalSheetBaseData {
     this.transitionAnimationController,
     this.constraints,
     this.useSafeArea,
+    this.barrierLabel,
+    this.scrollControlDisabledMaxHeightRatio,
+    this.showDragHandle,
   });
 }
 
@@ -284,6 +295,11 @@ Future<T?> showPlatformModalSheet<T>({
       constraints: material?.constraints,
       anchorPoint: material?.anchorPoint,
       useSafeArea: material?.useSafeArea ?? false,
+      barrierLabel: material?.barrierLabel,
+      scrollControlDisabledMaxHeightRatio:
+          material?.scrollControlDisabledMaxHeightRatio ??
+              _defaultScrollControlDisabledMaxHeightRatio,
+      showDragHandle: material?.showDragHandle,
     );
   } else {
     return showCupertinoModalPopup<T>(

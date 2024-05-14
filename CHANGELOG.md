@@ -1,3 +1,33 @@
+## [7.0.0]
+
+#### (Flutter version support: v3.19.6)
+
+- Adds all the flutter 3.19 additional properties for platform widgets
+- Updated cupertino_icons to version 1.0.8
+- Added deprecation notice on switching between material 2 and material 3. Calling these has no effect and the method calls will be removed in a furture version
+
+## [6.1.0]
+
+#### (Flutter version support: v3.16.8)
+
+- Platform date picker modalColor uses backgroundColor (thanks fdwl)
+- Added exit_to_app icon to PlatformIcons (thanks Kiruel)
+- Added PlatformScrollbar (thanks bookshiyi)
+- BREAKING CHANGE - Material 3 uses camel case rather than ALL CAPS for buttons. If you use `PlatformText` on Android the default will now be camel case, which is the equavalent to just using `Text`. It is recommended to move away from `PlatformText` nad use flutter `Text` widget as this will become deprecated and then removed in future versions. If you need to keep existing ALL CAPS behaviour, set `matchMaterialCaseForPlatformText` to `false`. `PlatformProvider(settings: PlatformSettingsData(matchMaterialCaseForPlatformText: false))`.
+
+## [6.0.2]
+
+#### (Flutter version support: v3.16.0)
+
+- Adds all the flutter 3.16 additional properties for platform widgets
+
+## [6.0.1]
+
+#### (Flutter version support: v3.16.0)
+
+- Upgrade to flutter version 3.16.0 and sets the Dart min value to 3.2
+- Fixed `PlatformTextField` that had a breaking argument due to Flutter 3.16 (thanks kishormainali)
+
 ## [5.0.0]
 
 #### (Flutter version support: v3.13.0 - 3.13.9)

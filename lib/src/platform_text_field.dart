@@ -19,6 +19,7 @@ import 'package:flutter/material.dart'
         AdaptiveTextSelectionToolbar,
         InputCounterWidgetBuilder,
         InputDecoration,
+        MaterialStatesController,
         TextField;
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -236,6 +237,9 @@ class MaterialTextFieldData extends _BaseData {
     this.mouseCursor,
     this.onAppPrivateCommand,
     this.canRequestFocus,
+    this.cursorErrorColor,
+    this.onTapAlwaysCalled,
+    this.statesController,
   });
 
   final InputDecoration? decoration;
@@ -244,6 +248,9 @@ class MaterialTextFieldData extends _BaseData {
   final MouseCursor? mouseCursor;
   final AppPrivateCommandCallback? onAppPrivateCommand;
   final bool? canRequestFocus;
+  final Color? cursorErrorColor;
+  final bool? onTapAlwaysCalled;
+  final MaterialStatesController? statesController;
 }
 
 class CupertinoTextFieldData extends _BaseData {
@@ -310,6 +317,7 @@ class CupertinoTextFieldData extends _BaseData {
     this.suffix,
     this.suffixMode,
     this.clearButtonMode,
+    this.clearButtonSemanticLabel,
   });
 
   final BoxDecoration? decoration;
@@ -321,6 +329,7 @@ class CupertinoTextFieldData extends _BaseData {
   final Widget? suffix;
   final OverlayVisibilityMode? suffixMode;
   final OverlayVisibilityMode? clearButtonMode;
+  final String? clearButtonSemanticLabel;
 }
 
 class PlatformTextField
@@ -348,7 +357,7 @@ class PlatformTextField
   final void Function()? onEditingComplete;
   final void Function(String)? onSubmitted;
   final List<TextInputFormatter>? inputFormatters;
-  final bool? enabled;
+  final bool enabled;
   final double? cursorWidth;
   final Radius? cursorRadius;
   final DragStartBehavior? dragStartBehavior;
@@ -425,7 +434,7 @@ class PlatformTextField
     this.onEditingComplete,
     this.onSubmitted,
     this.inputFormatters,
-    this.enabled,
+    this.enabled = true,
     this.cursorWidth,
     this.cursorRadius,
     this.cursorColor,
@@ -562,6 +571,9 @@ class PlatformTextField
       cursorOpacityAnimates:
           data?.cursorOpacityAnimates ?? cursorOpacityAnimates,
       undoController: data?.undoController ?? undoController,
+      cursorErrorColor: data?.cursorErrorColor,
+      onTapAlwaysCalled: data?.onTapAlwaysCalled ?? false,
+      statesController: data?.statesController,
       // toolbarOptions: Deprecated
     );
   }
@@ -664,6 +676,7 @@ class PlatformTextField
       cursorOpacityAnimates:
           data?.cursorOpacityAnimates ?? cursorOpacityAnimates ?? true,
       undoController: data?.undoController ?? undoController,
+      clearButtonSemanticLabel: data?.clearButtonSemanticLabel,
       // toolbarOptions: Deprecated
     );
   }
